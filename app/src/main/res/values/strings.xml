@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+    <string name="base_url">http://api.themoviedb.org/3</string>
+</resources>
