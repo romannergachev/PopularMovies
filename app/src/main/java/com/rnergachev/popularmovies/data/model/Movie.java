@@ -20,4 +20,28 @@ public class Movie {
     private double popularity;
     @SerializedName("vote_average")
     private double voteAverage;
+
+    public String getPosterPath() {
+        return posterPath;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public double getPopularity() {
+        return popularity;
+    }
+
+    public double getVoteAverage() {
+        return voteAverage;
+    }
 }

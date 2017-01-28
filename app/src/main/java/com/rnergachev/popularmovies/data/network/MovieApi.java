@@ -1,20 +1,13 @@
 package com.rnergachev.popularmovies.data.network;
 
-import android.content.res.Resources;
-
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.rnergachev.popularmovies.BuildConfig;
-import com.rnergachev.popularmovies.R;
-import com.rnergachev.popularmovies.data.model.Movie;
-
-import java.util.List;
-
-import javax.inject.Inject;
+import com.rnergachev.popularmovies.data.model.MoviesResponse;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
@@ -26,26 +19,25 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MovieApi {
     private MovieDbService movieDbService;
 
-    @Inject
-    public MovieApi() {
+    public MovieApi(String baseUrl) {
         Retrofit retrofit = new Retrofit.Builder()
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(Resources.getSystem().getString(R.string.base_url))
+                .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         movieDbService = retrofit.create(MovieDbService.class);
     }
 
-    public Observable<List<Movie>> popularMovies(int page) {
+    public Observable<MoviesResponse> popularMovies(int page) {
         return applySchedulers(movieDbService.pupularMovies(BuildConfig.THE_MOVIE_DB_API_KEY, page));
     }
 
-    public Observable<List<Movie>> topRatedMovies(int page) {
+    public Observable<MoviesResponse> topRatedMovies(int page) {
         return applySchedulers(movieDbService.topRatedMovies(BuildConfig.THE_MOVIE_DB_API_KEY, page));
     }
 
-    private Observable<List<Movie>> applySchedulers(Observable<List<Movie>> observable) {
+    private Observable<MoviesResponse> applySchedulers(Observable<MoviesResponse> observable) {
         return observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 }
