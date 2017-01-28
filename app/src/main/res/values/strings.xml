@@ -3,4 +3,10 @@
     <string name="base_url">http://api.themoviedb.org/3/</string>
     <string name="image_base_url">http://image.tmdb.org/t/p/w185//</string>
     <string name="error_message">An error has occurred. Please try again later.</string>
+    <string name="thumbnail">Thumbnail</string>
+
+    <string-array name="sort_array">
+        <item>Popular Movies</item>
+        <item>Top Rated Movies</item>
+    </string-array>
 </resources>

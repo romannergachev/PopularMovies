@@ -12,6 +12,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField "String", "THE_MOVIE_DB_API_KEY",  "\"$api_key\""
+        buildConfigField "int", "NUMBER_OF_COLUMNS",  "$number_of_columns"
 
         jackOptions {
             enabled true
