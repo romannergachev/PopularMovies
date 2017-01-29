@@ -1,5 +1,6 @@
 package com.rnergachev.popularmovies.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,7 +18,7 @@ import com.rnergachev.popularmovies.BuildConfig;
 import com.rnergachev.popularmovies.R;
 import com.rnergachev.popularmovies.data.model.Movie;
 import com.rnergachev.popularmovies.ui.adapter.DiscoveryAdapter;
-import com.rnergachev.popularmovies.ui.adapter.EndlessRecyclerViewScrollListener;
+import com.rnergachev.popularmovies.ui.listener.EndlessRecyclerViewScrollListener;
 
 /**
  * Activity with the list of the movies
@@ -52,14 +53,10 @@ public class DiscoveryActivity
         gridLayoutManager   = new GridLayoutManager(this, BuildConfig.NUMBER_OF_COLUMNS);
 
         setSupportActionBar(toolbar);
-        try {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        } catch (NullPointerException ex) {
-            Log.d(getClass().getName(), "Cannot disable the title!");
-        }
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        //add and configure spinner
         currentSort = 0;
-
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
             this,
             R.array.sort_array,
@@ -71,6 +68,8 @@ public class DiscoveryActivity
 
         movieRecyclerView.setLayoutManager(gridLayoutManager);
         movieRecyclerView.setAdapter(discoveryAdapter);
+
+        //add view scroll listener to check the end of the list and fetch new data
         scrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -83,27 +82,22 @@ public class DiscoveryActivity
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public void onClick(Movie movie) {
-        Log.d(getClass().getName(), "CLICK");
+        Intent intent = new Intent(this, MovieActivity.class);
+        intent.putExtra(getString(R.string.extra_movie), movie);
+        startActivity(intent);
     }
 
     @Override
     public void onError(Throwable exception) {
         onFetchingEnded();
         Log.d(getClass().getName(), exception.getMessage());
-        movieRecyclerView.setVisibility(View.INVISIBLE);
         errorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onDismissError() {
         errorMessageDisplay.setVisibility(View.INVISIBLE);
-        movieRecyclerView.setVisibility(View.VISIBLE);
     }
 
     @Override

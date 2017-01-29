@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
- * Model class for Popular Movies request
+ * Model class for Movies request
  *
  * Created by roman on 28.1.2017.
  */

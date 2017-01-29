@@ -1,4 +1,4 @@
-package com.rnergachev.popularmovies.ui.adapter;
+package com.rnergachev.popularmovies.ui.listener;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;

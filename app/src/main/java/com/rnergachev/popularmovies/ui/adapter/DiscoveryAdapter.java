@@ -45,13 +45,35 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
     }
 
     public interface DiscoveryAdapterHandler {
+        /**
+         * Performs the movie selection
+         *
+         * @param  movie that has been selected
+         */
         void onClick(Movie movie);
+        /**
+         * Returns the error
+         *
+         * @param  exception error
+         */
         void onError(Throwable exception);
+        /**
+         * Shows progress bar
+         */
         void onFetchingStarted();
+        /**
+         * Hides progress bar
+         */
         void onFetchingEnded();
+        /**
+         * Dismisses error
+         */
         void onDismissError();
     }
 
+    /**
+     * ViewHolder class in order to hold and reuse previously inflated views
+     */
     class DiscoveryAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final ImageView movieThumbnail;
@@ -88,6 +110,10 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
         return movieList.size();
     }
 
+    /**
+     * Fetches the movies (popular or top rated) and add them to the movieList
+     *
+     */
     public void fetchMovies() {
         if (currentPage == maxPage) {
             return;
@@ -115,6 +141,11 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
 
     }
 
+    /**
+     * Clears adapter before fetch data with a new sort type
+     *
+     * @param  isPopularSort new sort type
+     */
     public void clearAdapter(boolean isPopularSort) {
         currentPage = 0;
         maxPage = Integer.MAX_VALUE;
