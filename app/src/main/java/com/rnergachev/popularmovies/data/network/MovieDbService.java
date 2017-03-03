@@ -1,9 +1,12 @@
 package com.rnergachev.popularmovies.data.network;
 
 import com.rnergachev.popularmovies.data.model.MoviesResponse;
+import com.rnergachev.popularmovies.data.model.ReviewsResponse;
+import com.rnergachev.popularmovies.data.model.TrailersResponse;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -33,4 +36,25 @@ interface MovieDbService {
      */
     @GET("movie/top_rated")
     Observable<MoviesResponse> topRatedMovies(@Query("api_key") String apiKey, @Query("page") int page);
+
+    /**
+     * Returns trailers for the selected movie
+     *
+     * @param  apiKey  api key
+     * @param  movieId movie id
+     * @return        {@link Observable<TrailersResponse>}
+     */
+    @GET("movie/{movie_id}/videos")
+    Observable<TrailersResponse> getTrailers(@Query("api_key") String apiKey, @Path("movie_id") int movieId);
+
+    /**
+     * Returns reviews for the selected movie
+     *
+     * @param  apiKey  api key
+     * @param  movieId movie id
+     * @return        {@link Observable<ReviewsResponse>}
+     */
+    @GET("movie/{movie_id}/reviews")
+    Observable<ReviewsResponse> getReviews(@Query("api_key") String apiKey, @Path("movie_id") int movieId);
+
 }
