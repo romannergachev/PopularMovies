@@ -6,6 +6,7 @@
     <string name="thumbnail">Thumbnail</string>
     <string name="extra_movie">EXTRA_MOVIE</string>
     <string name="extra_position">EXTRA_POSITION</string>
+    <string name="sort_type">SORT_TYPE</string>
     <string name="tag_adapter_fragment">adapter_fragment</string>
 
     <string-array name="sort_array">

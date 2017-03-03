@@ -59,6 +59,11 @@ public class AdapterFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         if(discoveryAdapter != null) {
             callbacks.setAdapter(discoveryAdapter);
         }

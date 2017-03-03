@@ -4,7 +4,6 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,7 +44,7 @@ public class DiscoveryActivity
     private EndlessRecyclerViewScrollListener scrollListener;
     private GridLayoutManager gridLayoutManager;
     private int currentSort;
-    private int currentPosition;
+    private Integer currentPosition;
     private DiscoveryAdapter discoveryAdapter;
     private AdapterFragment adapterFragment;
 
@@ -56,7 +55,7 @@ public class DiscoveryActivity
 
         ButterKnife.bind(this);
 
-        currentPosition = 0;
+        currentPosition = null;
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -84,15 +83,17 @@ public class DiscoveryActivity
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         outState.putInt(getString(R.string.extra_position), gridLayoutManager.findFirstVisibleItemPosition());
+        outState.putInt(getString(R.string.sort_type), currentSort);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         currentPosition = savedInstanceState.getInt(getString(R.string.extra_position));
+        currentSort = savedInstanceState.getInt(getString(R.string.sort_type));
     }
 
     @Override
@@ -132,6 +133,7 @@ public class DiscoveryActivity
         gridLayoutManager.removeAllViews();
         currentSort = position;
         discoveryAdapter.clearAdapter(position == 0);
+        currentPosition = null;
         discoveryAdapter.fetchMovies();
     }
 
@@ -162,7 +164,7 @@ public class DiscoveryActivity
         };
         movieRecyclerView.addOnScrollListener(scrollListener);
 
-        if (currentPosition != 0) {
+        if (currentPosition != null) {
             gridLayoutManager.scrollToPosition(currentPosition);
         } else {
             discoveryAdapter.fetchMovies();
