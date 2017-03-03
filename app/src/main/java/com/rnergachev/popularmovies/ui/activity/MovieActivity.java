@@ -40,8 +40,8 @@ public class MovieActivity extends AppCompatActivity {
         //configure toolbar
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(arrow -> onBackPressed());
 
         //restore movie from extras as parcelable
