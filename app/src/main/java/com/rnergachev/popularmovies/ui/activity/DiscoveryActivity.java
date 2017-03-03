@@ -1,6 +1,7 @@
 package com.rnergachev.popularmovies.ui.activity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -50,7 +51,13 @@ public class DiscoveryActivity
         Spinner spinner     = (Spinner) findViewById(R.id.spinner_sort);
 
         discoveryAdapter    = new DiscoveryAdapter(this, this, true);
-        gridLayoutManager   = new GridLayoutManager(this, BuildConfig.NUMBER_OF_COLUMNS);
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            gridLayoutManager   = new GridLayoutManager(this, BuildConfig.NUMBER_OF_COLUMNS_PORT);
+        }
+        else{
+            gridLayoutManager   = new GridLayoutManager(this, BuildConfig.NUMBER_OF_COLUMNS_LAND);
+        }
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
