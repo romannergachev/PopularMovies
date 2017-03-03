@@ -21,6 +21,9 @@ import com.rnergachev.popularmovies.data.model.Movie;
 import com.rnergachev.popularmovies.ui.adapter.DiscoveryAdapter;
 import com.rnergachev.popularmovies.ui.listener.EndlessRecyclerViewScrollListener;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Activity with the list of the movies
  *
@@ -31,24 +34,22 @@ public class DiscoveryActivity
     extends AppCompatActivity
     implements DiscoveryAdapter.DiscoveryAdapterHandler, AdapterView.OnItemSelectedListener
 {
-    private RecyclerView movieRecyclerView;
-    private DiscoveryAdapter discoveryAdapter;
-    private TextView errorMessageDisplay;
-    private ProgressBar loadingIndicator;
+    @BindView(R.id.movies_list) RecyclerView movieRecyclerView;
+    @BindView(R.id.tv_error_message_display) TextView errorMessageDisplay;
+    @BindView(R.id.pb_loading_indicator) ProgressBar loadingIndicator;
+    @BindView(R.id.my_toolbar) Toolbar toolbar;
+    @BindView(R.id.spinner_sort) Spinner spinner;
     private EndlessRecyclerViewScrollListener scrollListener;
     private GridLayoutManager gridLayoutManager;
     private int currentSort;
+    private DiscoveryAdapter discoveryAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_discovery);
 
-        Toolbar toolbar     = (Toolbar) findViewById(R.id.my_toolbar);
-        errorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
-        loadingIndicator    = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-        movieRecyclerView   = (RecyclerView) findViewById(R.id.movies_list);
-        Spinner spinner     = (Spinner) findViewById(R.id.spinner_sort);
+        ButterKnife.bind(this);
 
         discoveryAdapter    = new DiscoveryAdapter(this, this, true);
 

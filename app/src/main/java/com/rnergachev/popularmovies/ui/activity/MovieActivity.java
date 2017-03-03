@@ -11,6 +11,9 @@ import com.rnergachev.popularmovies.R;
 import com.rnergachev.popularmovies.data.model.Movie;
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Activity with the details of the selected movie
  *
@@ -20,13 +23,22 @@ import com.squareup.picasso.Picasso;
 public class MovieActivity extends AppCompatActivity {
     private Movie movie;
 
+    @BindView(R.id.movie_poster_image_view) ImageView poster;
+    @BindView(R.id.title_text_view) TextView title;
+    @BindView(R.id.release_date_text_view) TextView date;
+    @BindView(R.id.votes_text_view) TextView votes;
+    @BindView(R.id.overview_text_view) TextView overview;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
 
+        ButterKnife.bind(this);
+
         //configure toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -34,12 +46,6 @@ public class MovieActivity extends AppCompatActivity {
 
         //restore movie from extras as parcelable
         movie = getIntent().getParcelableExtra(getString(R.string.extra_movie));
-
-        ImageView poster  = (ImageView) findViewById(R.id.movie_poster_image_view);
-        TextView title    = (TextView)  findViewById(R.id.title_text_view);
-        TextView date     = (TextView)  findViewById(R.id.release_date_text_view);
-        TextView votes    = (TextView)  findViewById(R.id.votes_text_view);
-        TextView overview = (TextView)  findViewById(R.id.overview_text_view);
 
         //show data on screen
         Picasso.with(this).load(getString(R.string.image_base_url) + movie.getPosterPath()).into(poster);

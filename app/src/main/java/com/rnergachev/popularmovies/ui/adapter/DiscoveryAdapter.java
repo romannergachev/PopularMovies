@@ -17,6 +17,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.reactivex.Observable;
 
 /**
@@ -76,11 +78,11 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
      */
     class DiscoveryAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private final ImageView movieThumbnail;
+        @BindView(R.id.movie_thumbnail_image_view) ImageView movieThumbnail;
 
         DiscoveryAdapterViewHolder(View view) {
             super(view);
-            movieThumbnail = (ImageView) view.findViewById(R.id.movie_thumbnail_image_view);
+            ButterKnife.bind(this, view);
             view.setOnClickListener(this);
         }
 
