@@ -1,5 +1,6 @@
 package com.rnergachev.popularmovies.ui.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.rnergachev.popularmovies.PopularMoviesApplication;
 import com.rnergachev.popularmovies.R;
 import com.rnergachev.popularmovies.data.model.Movie;
 import com.rnergachev.popularmovies.data.model.MoviesResponse;
@@ -16,6 +18,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,16 +38,17 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
     private Context context;
     private final DiscoveryAdapterHandler handler;
     private boolean isPopularSort;
-    private MovieApi movieApi;
+    @Inject MovieApi movieApi;
 
-    public DiscoveryAdapter(Context context, DiscoveryAdapterHandler handler, boolean isPopularSort) {
+    public DiscoveryAdapter(Activity activity, DiscoveryAdapterHandler handler, boolean isPopularSort) {
         currentPage = 0;
         maxPage = Integer.MAX_VALUE;
-        this.context = context;
+        this.context = activity;
         this.handler = handler;
-        movieApi = new MovieApi(context.getString(R.string.base_url));
         movieList = new ArrayList<>();
         this.isPopularSort = isPopularSort;
+        PopularMoviesApplication application = (PopularMoviesApplication) activity.getApplication();
+        application.appComponent.inject(this);
     }
 
     public interface DiscoveryAdapterHandler {
