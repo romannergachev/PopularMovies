@@ -1,8 +1,10 @@
 package com.rnergachev.popularmovies.ui.activity;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +21,7 @@ import com.rnergachev.popularmovies.BuildConfig;
 import com.rnergachev.popularmovies.R;
 import com.rnergachev.popularmovies.data.model.Movie;
 import com.rnergachev.popularmovies.ui.adapter.DiscoveryAdapter;
+import com.rnergachev.popularmovies.ui.fragment.AdapterFragment;
 import com.rnergachev.popularmovies.ui.listener.EndlessRecyclerViewScrollListener;
 
 import butterknife.BindView;
@@ -32,7 +35,7 @@ import butterknife.ButterKnife;
 
 public class DiscoveryActivity
     extends AppCompatActivity
-    implements DiscoveryAdapter.DiscoveryAdapterHandler, AdapterView.OnItemSelectedListener
+    implements DiscoveryAdapter.DiscoveryAdapterHandler, AdapterView.OnItemSelectedListener, AdapterFragment.AdapterCallbacks
 {
     @BindView(R.id.movies_list) RecyclerView movieRecyclerView;
     @BindView(R.id.tv_error_message_display) TextView errorMessageDisplay;
@@ -42,7 +45,9 @@ public class DiscoveryActivity
     private EndlessRecyclerViewScrollListener scrollListener;
     private GridLayoutManager gridLayoutManager;
     private int currentSort;
+    private int currentPosition;
     private DiscoveryAdapter discoveryAdapter;
+    private AdapterFragment adapterFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,14 +56,7 @@ public class DiscoveryActivity
 
         ButterKnife.bind(this);
 
-        discoveryAdapter    = new DiscoveryAdapter(this, this, true);
-
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            gridLayoutManager   = new GridLayoutManager(this, BuildConfig.NUMBER_OF_COLUMNS_PORT);
-        }
-        else{
-            gridLayoutManager   = new GridLayoutManager(this, BuildConfig.NUMBER_OF_COLUMNS_LAND);
-        }
+        currentPosition = 0;
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -74,19 +72,27 @@ public class DiscoveryActivity
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
-        movieRecyclerView.setLayoutManager(gridLayoutManager);
-        movieRecyclerView.setAdapter(discoveryAdapter);
+        FragmentManager fm = getFragmentManager();
+        adapterFragment = (AdapterFragment) fm.findFragmentByTag(getString(R.string.tag_adapter_fragment));
 
-        //add view scroll listener to check the end of the list and fetch new data
-        scrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                discoveryAdapter.fetchMovies();
-            }
-        };
-        movieRecyclerView.addOnScrollListener(scrollListener);
+        // If the Fragment is non-null, then it is currently being
+        // retained across a configuration change.
+        if (adapterFragment == null) {
+            adapterFragment = new AdapterFragment();
+            fm.beginTransaction().add(adapterFragment, getString(R.string.tag_adapter_fragment)).commit();
+        }
+    }
 
-        discoveryAdapter.fetchMovies();
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putInt(getString(R.string.extra_position), gridLayoutManager.findFirstVisibleItemPosition());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        currentPosition = savedInstanceState.getInt(getString(R.string.extra_position));
     }
 
     @Override
@@ -131,5 +137,35 @@ public class DiscoveryActivity
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
+    }
+
+    @Override
+    public void setAdapter(DiscoveryAdapter adapter) {
+        discoveryAdapter   = adapter;
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            gridLayoutManager   = new GridLayoutManager(this, BuildConfig.NUMBER_OF_COLUMNS_PORT);
+        }
+        else{
+            gridLayoutManager   = new GridLayoutManager(this, BuildConfig.NUMBER_OF_COLUMNS_LAND);
+        }
+
+        movieRecyclerView.setLayoutManager(gridLayoutManager);
+        movieRecyclerView.setAdapter(discoveryAdapter);
+
+        //add view scroll listener to check the end of the list and fetch new data
+        scrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                discoveryAdapter.fetchMovies();
+            }
+        };
+        movieRecyclerView.addOnScrollListener(scrollListener);
+
+        if (currentPosition != 0) {
+            gridLayoutManager.scrollToPosition(currentPosition);
+        } else {
+            discoveryAdapter.fetchMovies();
+        }
     }
 }
