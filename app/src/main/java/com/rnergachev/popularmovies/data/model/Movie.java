@@ -58,6 +58,10 @@ public class Movie implements Parcelable {
         return voteAverage;
     }
 
+    public int getId() {
+        return id;
+    }
+
     @Override
     public int describeContents() {
         return 0;

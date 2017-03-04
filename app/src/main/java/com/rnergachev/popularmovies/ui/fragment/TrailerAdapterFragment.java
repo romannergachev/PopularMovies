@@ -4,27 +4,28 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.rnergachev.popularmovies.ui.activity.DiscoveryActivity;
-import com.rnergachev.popularmovies.ui.adapter.DiscoveryAdapter;
+import com.rnergachev.popularmovies.ui.activity.MovieActivity;
+import com.rnergachev.popularmovies.ui.adapter.TrailerAdapter;
 
 /**
- * Fragment for background tasks
+ * Fragment for trailer background tasks
  *
  * Created by rnergachev on 03/03/2017.
  */
 
-public class AdapterFragment extends Fragment {
+public class TrailerAdapterFragment extends Fragment {
 
     /**
      * Callback interface through which the fragment will report the
      * task's progress and results back to the Activity.
      */
     public interface AdapterCallbacks {
-        void setAdapter(DiscoveryAdapter adapter);
+        void setTrailerAdapter(TrailerAdapter adapter, boolean isInitial);
     }
 
     private AdapterCallbacks callbacks;
-    private DiscoveryAdapter discoveryAdapter;
+    private TrailerAdapter trailerAdapter;
+    private boolean isInitial;
 
     /**
      * Hold a reference to the parent Activity so we can report the
@@ -49,10 +50,11 @@ public class AdapterFragment extends Fragment {
         // Retain this fragment across configuration changes.
         setRetainInstance(true);
 
-        DiscoveryActivity discoveryActivity = (DiscoveryActivity) getActivity();
+        MovieActivity movieActivity = (MovieActivity) getActivity();
 
         // Create and execute the background task.
-        discoveryAdapter = new DiscoveryAdapter(discoveryActivity, discoveryActivity, true);
+        trailerAdapter = new TrailerAdapter(movieActivity);
+        isInitial = true;
     }
 
     @Override
@@ -64,9 +66,10 @@ public class AdapterFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(discoveryAdapter != null) {
-            callbacks.setAdapter(discoveryAdapter);
+        if(trailerAdapter != null) {
+            callbacks.setTrailerAdapter(trailerAdapter, isInitial);
         }
+        isInitial = false;
     }
 
     /**

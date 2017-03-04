@@ -2,6 +2,8 @@ package com.rnergachev.popularmovies.ui.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -60,7 +62,8 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerA
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            //todo use intent to open youtube
+            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + trailerList.get(adapterPosition).getKey())));
+            Log.i(getClass().getName(), "Starting video trailer...");
         }
     }
 

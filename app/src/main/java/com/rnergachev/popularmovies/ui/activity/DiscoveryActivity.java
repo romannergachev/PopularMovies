@@ -20,8 +20,7 @@ import com.rnergachev.popularmovies.BuildConfig;
 import com.rnergachev.popularmovies.R;
 import com.rnergachev.popularmovies.data.model.Movie;
 import com.rnergachev.popularmovies.ui.adapter.DiscoveryAdapter;
-import com.rnergachev.popularmovies.ui.decorator.RecyclerViewItemDecorator;
-import com.rnergachev.popularmovies.ui.fragment.AdapterFragment;
+import com.rnergachev.popularmovies.ui.fragment.DiscoveryAdapterFragment;
 import com.rnergachev.popularmovies.ui.listener.EndlessRecyclerViewScrollListener;
 
 import butterknife.BindView;
@@ -35,7 +34,7 @@ import butterknife.ButterKnife;
 
 public class DiscoveryActivity
     extends AppCompatActivity
-    implements DiscoveryAdapter.DiscoveryAdapterHandler, AdapterView.OnItemSelectedListener, AdapterFragment.AdapterCallbacks
+    implements DiscoveryAdapter.DiscoveryAdapterHandler, AdapterView.OnItemSelectedListener, DiscoveryAdapterFragment.AdapterCallbacks
 {
     @BindView(R.id.movies_list) RecyclerView movieRecyclerView;
     @BindView(R.id.tv_error_message_display) TextView errorMessageDisplay;
@@ -47,7 +46,7 @@ public class DiscoveryActivity
     private int currentSort;
     private Integer currentPosition;
     private DiscoveryAdapter discoveryAdapter;
-    private AdapterFragment adapterFragment;
+    private DiscoveryAdapterFragment discoveryAdapterFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,13 +72,13 @@ public class DiscoveryActivity
         spinner.setOnItemSelectedListener(this);
 
         FragmentManager fm = getFragmentManager();
-        adapterFragment = (AdapterFragment) fm.findFragmentByTag(getString(R.string.tag_adapter_fragment));
+        discoveryAdapterFragment = (DiscoveryAdapterFragment) fm.findFragmentByTag(getString(R.string.tag_adapter_fragment));
 
         // If the Fragment is non-null, then it is currently being
         // retained across a configuration change.
-        if (adapterFragment == null) {
-            adapterFragment = new AdapterFragment();
-            fm.beginTransaction().add(adapterFragment, getString(R.string.tag_adapter_fragment)).commit();
+        if (discoveryAdapterFragment == null) {
+            discoveryAdapterFragment = new DiscoveryAdapterFragment();
+            fm.beginTransaction().add(discoveryAdapterFragment, getString(R.string.tag_adapter_fragment)).commit();
         }
     }
 

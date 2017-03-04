@@ -54,7 +54,7 @@ public class MovieApi {
      * @return        {@link Observable<TrailersResponse>}
      */
     public Observable<TrailersResponse> getTrailers(int movieId) {
-        return applySchedulers(movieDbService.getTrailers(BuildConfig.THE_MOVIE_DB_API_KEY, movieId));
+        return applySchedulers(movieDbService.getTrailers(movieId, BuildConfig.THE_MOVIE_DB_API_KEY));
     }
 
     /**
@@ -64,7 +64,7 @@ public class MovieApi {
      * @return        {@link Observable<ReviewsResponse>}
      */
     public Observable<ReviewsResponse> getReviews(int movieId) {
-        return applySchedulers(movieDbService.getReviews(BuildConfig.THE_MOVIE_DB_API_KEY, movieId));
+        return applySchedulers(movieDbService.getReviews(movieId, BuildConfig.THE_MOVIE_DB_API_KEY));
     }
 
     /**

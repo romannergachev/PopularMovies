@@ -6,8 +6,11 @@
     <string name="thumbnail">Thumbnail</string>
     <string name="extra_movie">EXTRA_MOVIE</string>
     <string name="extra_position">EXTRA_POSITION</string>
+    <string name="review_position">REVIEW_POSITION</string>
     <string name="sort_type">SORT_TYPE</string>
     <string name="tag_adapter_fragment">adapter_fragment</string>
+    <string name="tag_trailer_adapter_fragment">trailer_adapter_fragment</string>
+    <string name="tag_review_adapter_fragment">review_adapter_fragment</string>
     <string name="utube_thmb_path">http://img.youtube.com/vi/</string>
     <string name="utube_thmb">/0.jpg</string>
     <string name="votes">/10</string>

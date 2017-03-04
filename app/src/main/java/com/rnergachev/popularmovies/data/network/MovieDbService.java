@@ -47,7 +47,7 @@ public interface MovieDbService {
      * @return        {@link Observable<TrailersResponse>}
      */
     @GET("movie/{movie_id}/videos")
-    Observable<TrailersResponse> getTrailers(@Query("api_key") String apiKey, @Path("movie_id") int movieId);
+    Observable<TrailersResponse> getTrailers(@Path("movie_id") int movieId, @Query("api_key") String apiKey);
 
     /**
      * Returns reviews for the selected movie
@@ -57,6 +57,6 @@ public interface MovieDbService {
      * @return        {@link Observable<ReviewsResponse>}
      */
     @GET("movie/{movie_id}/reviews")
-    Observable<ReviewsResponse> getReviews(@Query("api_key") String apiKey, @Path("movie_id") int movieId);
+    Observable<ReviewsResponse> getReviews(@Path("movie_id") int movieId, @Query("api_key") String apiKey);
 
 }
