@@ -20,6 +20,7 @@ import com.rnergachev.popularmovies.BuildConfig;
 import com.rnergachev.popularmovies.R;
 import com.rnergachev.popularmovies.data.model.Movie;
 import com.rnergachev.popularmovies.ui.adapter.DiscoveryAdapter;
+import com.rnergachev.popularmovies.ui.decorator.RecyclerViewItemDecorator;
 import com.rnergachev.popularmovies.ui.fragment.AdapterFragment;
 import com.rnergachev.popularmovies.ui.listener.EndlessRecyclerViewScrollListener;
 
@@ -154,6 +155,8 @@ public class DiscoveryActivity
 
         movieRecyclerView.setLayoutManager(gridLayoutManager);
         movieRecyclerView.setAdapter(discoveryAdapter);
+
+        //movieRecyclerView.addItemDecoration(new RecyclerViewItemDecorator(0));
 
         //add view scroll listener to check the end of the list and fetch new data
         scrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
