@@ -10,6 +10,7 @@
     <string name="tag_adapter_fragment">adapter_fragment</string>
     <string name="utube_thmb_path">http://img.youtube.com/vi/</string>
     <string name="utube_thmb">/0.jpg</string>
+    <string name="votes">/10</string>
 
 
     <string-array name="sort_array">

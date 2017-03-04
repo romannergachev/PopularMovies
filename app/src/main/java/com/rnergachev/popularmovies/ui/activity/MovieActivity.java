@@ -49,9 +49,9 @@ public class MovieActivity extends AppCompatActivity {
 
         //show data on screen
         Picasso.with(this).load(getString(R.string.image_base_url) + movie.getPosterPath()).into(poster);
-        title.setText(movie.getTitle());
-        date.setText(movie.getReleaseDate());
-        votes.setText(String.valueOf(movie.getVoteAverage()));
+        title.append(movie.getTitle());
+        date.append(movie.getReleaseDate());
+        votes.append(String.valueOf(movie.getVoteAverage()) + getString(R.string.votes));
         overview.setText(movie.getOverview());
     }
 }
