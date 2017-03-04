@@ -10,7 +10,7 @@ public class TrailersResponse {
     private int id;
     private List<Trailer> results;
 
-    public List<Trailer> getMovies() {
+    public List<Trailer> getTrailers() {
         return results;
     }
 

@@ -17,7 +17,7 @@ public class ReviewsResponse {
     @SerializedName("total_pages")
     private int totalPages;
 
-    public List<Review> getMovies() {
+    public List<Review> getReviews() {
         return results;
     }
 

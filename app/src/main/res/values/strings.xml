@@ -8,6 +8,9 @@
     <string name="extra_position">EXTRA_POSITION</string>
     <string name="sort_type">SORT_TYPE</string>
     <string name="tag_adapter_fragment">adapter_fragment</string>
+    <string name="utube_thmb_path">http://img.youtube.com/vi/</string>
+    <string name="utube_thmb">/0.jpg</string>
+
 
     <string-array name="sort_array">
         <item>Popular Movies</item>

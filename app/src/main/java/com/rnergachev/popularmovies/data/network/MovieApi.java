@@ -2,6 +2,8 @@ package com.rnergachev.popularmovies.data.network;
 
 import com.rnergachev.popularmovies.BuildConfig;
 import com.rnergachev.popularmovies.data.model.MoviesResponse;
+import com.rnergachev.popularmovies.data.model.ReviewsResponse;
+import com.rnergachev.popularmovies.data.model.TrailersResponse;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -46,12 +48,32 @@ public class MovieApi {
     }
 
     /**
+     * Returns trailers as an Observable object
+     *
+     * @param  movieId   movie id
+     * @return        {@link Observable<TrailersResponse>}
+     */
+    public Observable<TrailersResponse> getTrailers(int movieId) {
+        return applySchedulers(movieDbService.getTrailers(BuildConfig.THE_MOVIE_DB_API_KEY, movieId));
+    }
+
+    /**
+     * Returns reviews as an Observable object
+     *
+     * @param  movieId   movie id
+     * @return        {@link Observable<ReviewsResponse>}
+     */
+    public Observable<ReviewsResponse> getReviews(int movieId) {
+        return applySchedulers(movieDbService.getReviews(BuildConfig.THE_MOVIE_DB_API_KEY, movieId));
+    }
+
+    /**
      * Adds schedulers to the call
      *
      * @param  observable object to add schedulers
      * @return        {@link Observable<MoviesResponse>}
      */
-    private Observable<MoviesResponse> applySchedulers(Observable<MoviesResponse> observable) {
+    private <T> Observable<T> applySchedulers(Observable<T> observable) {
         return observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 }
