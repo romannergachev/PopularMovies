@@ -6,12 +6,10 @@ import com.rnergachev.popularmovies.data.model.MoviesResponse;
 import com.rnergachev.popularmovies.data.model.ReviewsResponse;
 import com.rnergachev.popularmovies.data.model.TrailersResponse;
 
-import java.util.List;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -31,52 +29,52 @@ public class MovieApi {
     }
 
     /**
-     * Returns popular movies as an Observable object
+     * Returns popular movies as an Single object
      *
      * @param  page   number of current page
-     * @return        {@link Observable<MoviesResponse>}
+     * @return        {@link Single<MoviesResponse>}
      */
-    public Observable<MoviesResponse> popularMovies(int page) {
+    public Single<MoviesResponse> popularMovies(int page) {
         return applySchedulers(movieDbService.popularMovies(BuildConfig.THE_MOVIE_DB_API_KEY, page));
     }
 
     /**
-     * Returns top rated movies as an Observable object
+     * Returns top rated movies as an Single object
      *
      * @param  page   number of current page
-     * @return        {@link Observable<MoviesResponse>}
+     * @return        {@link Single<MoviesResponse>}
      */
-    public Observable<MoviesResponse> topRatedMovies(int page) {
+    public Single<MoviesResponse> topRatedMovies(int page) {
         return applySchedulers(movieDbService.topRatedMovies(BuildConfig.THE_MOVIE_DB_API_KEY, page));
     }
 
     /**
-     * Returns trailers as an Observable object
+     * Returns trailers as an Single object
      *
      * @param  movieId   movie id
-     * @return        {@link Observable<TrailersResponse>}
+     * @return        {@link Single<TrailersResponse>}
      */
-    public Observable<TrailersResponse> getTrailers(int movieId) {
+    public Single<TrailersResponse> getTrailers(int movieId) {
         return applySchedulers(movieDbService.getTrailers(movieId, BuildConfig.THE_MOVIE_DB_API_KEY));
     }
 
     /**
-     * Returns reviews as an Observable object
+     * Returns reviews as an Single object
      *
      * @param  movieId   movie id
-     * @return        {@link Observable<ReviewsResponse>}
+     * @return        {@link Single<ReviewsResponse>}
      */
-    public Observable<ReviewsResponse> getReviews(int movieId) {
+    public Single<ReviewsResponse> getReviews(int movieId) {
         return applySchedulers(movieDbService.getReviews(movieId, BuildConfig.THE_MOVIE_DB_API_KEY));
     }
 
     /**
      * Adds schedulers to the call
      *
-     * @param  observable object to add schedulers
-     * @return        {@link Observable<MoviesResponse>}
+     * @param  single object to add schedulers
+     * @return        {@link Single<MoviesResponse>}
      */
-    private <T> Observable<T> applySchedulers(Observable<T> observable) {
-        return observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    private <T> Single<T> applySchedulers(Single<T> single) {
+        return single.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 }

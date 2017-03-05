@@ -26,7 +26,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
 /**
  * Adapter class for Movies list
@@ -133,11 +133,11 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
         handler.onFetchingStarted();
         currentPage++;
         Log.d(getClass().getName(), "Fetching page: " + currentPage);
-        Observable<MoviesResponse> request;
+        Single<MoviesResponse> request;
         switch (sortType) {
             case 0: request = movieApi.popularMovies(currentPage); break;
             case 1: request = movieApi.topRatedMovies(currentPage); break;
-            default: request = Observable.just(new MoviesResponse());
+            default: request = Single.just(new MoviesResponse());
 
         }
 

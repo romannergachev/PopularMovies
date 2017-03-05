@@ -13,7 +13,7 @@ import com.rnergachev.popularmovies.ui.view.MovieActivityView;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -45,7 +45,7 @@ public class MovieActivityPresenter {
      * @param  movieToUpdate  movie
      */
     public void updateFavoriteStatus(Movie movieToUpdate) {
-        Observable.just(movieToUpdate).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+        Single.just(movieToUpdate).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                 movie -> {
                     CursorLoader cursorLoader = new CursorLoader(context, MovieContract.MovieEntry.CONTENT_URI,
                             null, MovieContract.MovieEntry.getSqlSelectForId(movie.getId()), null, null);
@@ -67,7 +67,7 @@ public class MovieActivityPresenter {
      * @param  currentMovie  movie
      */
     public void getFavoriteStatus(Movie currentMovie) {
-        Observable.just(currentMovie).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+        Single.just(currentMovie).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                 movie -> {
                     CursorLoader cursorLoader = new CursorLoader(context, MovieContract.MovieEntry.CONTENT_URI,
                             null, MovieContract.MovieEntry.getSqlSelectForId(movie.getId()), null, null);

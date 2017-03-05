@@ -25,7 +25,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
 /**
  * Adapter class for Trailers list
@@ -91,7 +91,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerA
      */
     public void fetchTrailers(int movieId) {
         Log.d(getClass().getName(), "Fetching trailers... ");
-        Observable<TrailersResponse> request = movieApi.getTrailers(movieId);
+        Single<TrailersResponse> request = movieApi.getTrailers(movieId);
 
         request.subscribe(
                 response -> {
