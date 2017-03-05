@@ -42,7 +42,7 @@ public class MovieActivityPresenter {
      * @param  movieToUpdate  movie
      */
     public void updateFavoriteStatus(Movie movieToUpdate) {
-        Observable.just(movieToUpdate).subscribeOn(AndroidSchedulers.mainThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+        Observable.just(movieToUpdate).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                 movie -> {
                     realm.beginTransaction();
                     RealmResults<Movie> movieFromRealm = realm.where(Movie.class).equalTo("id", movie.getId()).findAll();
