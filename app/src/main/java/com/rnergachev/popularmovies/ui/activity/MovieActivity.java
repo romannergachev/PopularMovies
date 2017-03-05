@@ -31,7 +31,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
 
 /**
  * Activity with the details of the selected movie

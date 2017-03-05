@@ -2,6 +2,8 @@ package com.rnergachev.popularmovies.ui.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.CursorLoader;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,9 +15,8 @@ import com.rnergachev.popularmovies.PopularMoviesApplication;
 import com.rnergachev.popularmovies.R;
 import com.rnergachev.popularmovies.data.model.Movie;
 import com.rnergachev.popularmovies.data.model.MoviesResponse;
+import com.rnergachev.popularmovies.data.model.db.MovieContract;
 import com.rnergachev.popularmovies.data.network.MovieApi;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -26,8 +27,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 /**
  * Adapter class for Movies list
@@ -43,7 +42,7 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
     private final DiscoveryAdapterHandler handler;
     private int sortType;
     @Inject MovieApi movieApi;
-    @Inject Realm realm;
+    private Cursor cursor;
 
     public DiscoveryAdapter(Activity activity, DiscoveryAdapterHandler handler, int sortType) {
         currentPage = 0;
@@ -145,14 +144,20 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
         request.subscribe(
             response -> {
                 if (sortType == context.getResources().getInteger(R.integer.favorites)) {
-                    RealmResults<Movie> realmResults = realm.where(Movie.class).findAll();
-                    if (realmResults.size() == 0) {
+                    CursorLoader cursorLoader = new CursorLoader(context, MovieContract.MovieEntry.CONTENT_URI,
+                            FAVORITES_PROJECTION, null, null, null);
+                    Cursor c = cursorLoader.loadInBackground();
+
+                    if (c.getCount() == 0) {
                         movieList.clear();
                         this.notifyDataSetChanged();
                         return;
                     }
                     movieList.clear();
-                    movieList.addAll(realmResults.subList(0, realmResults.size()));
+                    for(c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+                        movieList.add(new Movie(c));
+                    }
+
                     this.notifyDataSetChanged();
                 } else {
                     movieList.addAll(response.getMovies());
@@ -178,4 +183,13 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
         movieList = new ArrayList<>();
         this.sortType = sortType;
     }
+
+    private static final String[] FAVORITES_PROJECTION = {
+            MovieContract.MovieEntry.COLUMN_MOVIE_ID,
+            MovieContract.MovieEntry.COLUMN_NAME,
+            MovieContract.MovieEntry.COLUMN_POSTER_PATH,
+            MovieContract.MovieEntry.COLUMN_RELEASE_DATE,
+            MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE,
+            MovieContract.MovieEntry.COLUMN_OVERVIEW,
+    };
 }

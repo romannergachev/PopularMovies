@@ -1,12 +1,10 @@
 package com.rnergachev.popularmovies.data.model;
 
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 /**
  * Movie model class for retrofit response
@@ -14,9 +12,8 @@ import io.realm.annotations.PrimaryKey;
  * Created by rnergachev on 27/01/2017.
  */
 
-public class Movie extends RealmObject implements Parcelable {
+public class Movie implements Parcelable {
     //Movie details layout contains title, release date, movie poster, vote average, and plot synopsis.
-    @PrimaryKey
     private int id;
     @SerializedName("poster_path")
     private String posterPath;
@@ -28,8 +25,20 @@ public class Movie extends RealmObject implements Parcelable {
     @SerializedName("vote_average")
     private double voteAverage;
 
-    public Movie() {
+    private static final int INDEX_MOVIE_ID = 0;
+    private static final int INDEX_MOVIE_NAME = 1;
+    private static final int INDEX_MOVIE_POSTER_PATH = 2;
+    private static final int INDEX_MOVIE_RELEASE_DATE = 3;
+    private static final int INDEX_MOVIE_VOTE_AVERAGE = 4;
+    private static final int INDEX_MOVIE_OVERVIEW = 5;
 
+    public Movie(Cursor cursor) {
+        this.id = cursor.getInt(INDEX_MOVIE_ID);
+        this.title = cursor.getString(INDEX_MOVIE_NAME);
+        this.posterPath = cursor.getString(INDEX_MOVIE_POSTER_PATH);
+        this.releaseDate = cursor.getString(INDEX_MOVIE_RELEASE_DATE);
+        this.voteAverage = cursor.getDouble(INDEX_MOVIE_VOTE_AVERAGE);
+        this.overview = cursor.getString(INDEX_MOVIE_OVERVIEW);
     }
 
     public Movie(int id, String posterPath, String overview, String releaseDate, String title, double popularity, double voteAverage) {

@@ -20,6 +20,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activity.MovieActivity"/>
+
+        <provider
+            android:name=".data.model.content.provider.MovieProvider"
+            android:authorities="com.rnergachev.popularmovies"
+            android:exported="false"
+            android:protectionLevel="signature"
+            android:syncable="true"/>
     </application>
 
 </manifest>

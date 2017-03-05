@@ -1,8 +1,13 @@
 package com.rnergachev.popularmovies.ui.presenter;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.CursorLoader;
+import android.database.Cursor;
 import android.util.Log;
 
 import com.rnergachev.popularmovies.data.model.Movie;
+import com.rnergachev.popularmovies.data.model.db.MovieContract;
 import com.rnergachev.popularmovies.ui.view.MovieActivityView;
 
 import javax.inject.Inject;
@@ -11,8 +16,6 @@ import javax.inject.Singleton;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 /**
  * MovieActivity presenter
@@ -22,7 +25,7 @@ import io.realm.RealmResults;
 
 @Singleton
 public class MovieActivityPresenter {
-    @Inject Realm realm;
+    @Inject Context context;
     private MovieActivityView view;
 
     @Inject MovieActivityPresenter() {
@@ -44,15 +47,15 @@ public class MovieActivityPresenter {
     public void updateFavoriteStatus(Movie movieToUpdate) {
         Observable.just(movieToUpdate).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                 movie -> {
-                    realm.beginTransaction();
-                    RealmResults<Movie> movieFromRealm = realm.where(Movie.class).equalTo("id", movie.getId()).findAll();
-                    if (movieFromRealm.size() == 0) {
-                        realm.copyToRealm(movie); // Persist unmanaged objects
-                    } else {
-                        movieFromRealm.deleteAllFromRealm();
-                    }
+                    CursorLoader cursorLoader = new CursorLoader(context, MovieContract.MovieEntry.CONTENT_URI,
+                            null, MovieContract.MovieEntry.getSqlSelectForId(movie.getId()), null, null);
+                    Cursor c = cursorLoader.loadInBackground();
 
-                    realm.commitTransaction();
+                    if (c.getCount() == 0) {
+                        insertMovie(context, movie);
+                    } else {
+                        deleteMovie(context, movie.getId());
+                    }
                 },
                 this::showError
         );
@@ -66,8 +69,11 @@ public class MovieActivityPresenter {
     public void getFavoriteStatus(Movie currentMovie) {
         Observable.just(currentMovie).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                 movie -> {
-                    RealmResults<Movie> movieFromRealm = realm.where(Movie.class).equalTo("id", movie.getId()).findAll();
-                    if (movieFromRealm.size() != 0) {
+                    CursorLoader cursorLoader = new CursorLoader(context, MovieContract.MovieEntry.CONTENT_URI,
+                            null, MovieContract.MovieEntry.getSqlSelectForId(movie.getId()), null, null);
+                    Cursor c = cursorLoader.loadInBackground();
+
+                    if (c.getCount() != 0) {
                         view.setFavoriteState(true);
                     } else {
                         view.setFavoriteState(false);
@@ -84,6 +90,26 @@ public class MovieActivityPresenter {
      */
     private void showError(Throwable exception) {
         Log.d(this.getClass().getName(), exception.getMessage());
+    }
+
+    private static ContentValues createMovieDBEntry(Movie movie) {
+        ContentValues movieEntry = new ContentValues();
+        movieEntry.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, movie.getId());
+        movieEntry.put(MovieContract.MovieEntry.COLUMN_NAME, movie.getTitle());
+        movieEntry.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, movie.getOverview());
+        movieEntry.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, movie.getPosterPath());
+        movieEntry.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, movie.getReleaseDate());
+        movieEntry.put(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE, movie.getVoteAverage());
+        return movieEntry;
+    }
+
+    private void insertMovie(Context context, Movie movie) {
+        ContentValues movieEntry = createMovieDBEntry(movie);
+        context.getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, movieEntry);
+    }
+
+    private void deleteMovie(Context context, int movieId) {
+        context.getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI, MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = " + movieId, null);
     }
 
 }
