@@ -21,7 +21,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
 /**
  * Adapter class for Reviews list
@@ -87,7 +87,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdap
         }
         currentPage++;
         Log.d(getClass().getName(), "Fetching reviews page: " + currentPage);
-        Observable<ReviewsResponse> request = movieApi.getReviews(movieId);
+        Single<ReviewsResponse> request = movieApi.getReviews(movieId);
 
         request.subscribe(
                 response -> {

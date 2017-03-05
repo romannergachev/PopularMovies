@@ -14,8 +14,6 @@ import com.rnergachev.popularmovies.R;
 import com.rnergachev.popularmovies.data.model.Movie;
 import com.rnergachev.popularmovies.data.model.MoviesResponse;
 import com.rnergachev.popularmovies.data.network.MovieApi;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -25,7 +23,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -134,11 +132,11 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
         handler.onFetchingStarted();
         currentPage++;
         Log.d(getClass().getName(), "Fetching page: " + currentPage);
-        Observable<MoviesResponse> request;
+        Single<MoviesResponse> request;
         switch (sortType) {
             case 0: request = movieApi.popularMovies(currentPage); break;
             case 1: request = movieApi.topRatedMovies(currentPage); break;
-            default: request = Observable.just(new MoviesResponse());
+            default: request = Single.just(new MoviesResponse());
 
         }
 

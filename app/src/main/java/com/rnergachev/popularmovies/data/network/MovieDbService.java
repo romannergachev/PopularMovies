@@ -4,7 +4,7 @@ import com.rnergachev.popularmovies.data.model.MoviesResponse;
 import com.rnergachev.popularmovies.data.model.ReviewsResponse;
 import com.rnergachev.popularmovies.data.model.TrailersResponse;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -18,43 +18,43 @@ import retrofit2.http.Query;
 public interface MovieDbService {
 
     /**
-     * Returns popular movies as an Observable object
+     * Returns popular movies as an Single object
      *
      * @param  apiKey api key
      * @param  page   number of current page
-     * @return        {@link Observable<MoviesResponse>}
+     * @return        {@link Single<MoviesResponse>}
      */
     @GET("movie/popular")
-    Observable<MoviesResponse> popularMovies(@Query("api_key") String apiKey, @Query("page") int page);
+    Single<MoviesResponse> popularMovies(@Query("api_key") String apiKey, @Query("page") int page);
 
     /**
-     * Returns top rated movies as an Observable object
+     * Returns top rated movies as an Single object
      *
      * @param  apiKey api key
      * @param  page   number of current page
-     * @return        {@link Observable<MoviesResponse>}
+     * @return        {@link Single<MoviesResponse>}
      */
     @GET("movie/top_rated")
-    Observable<MoviesResponse> topRatedMovies(@Query("api_key") String apiKey, @Query("page") int page);
+    Single<MoviesResponse> topRatedMovies(@Query("api_key") String apiKey, @Query("page") int page);
 
     /**
      * Returns trailers for the selected movie
      *
      * @param  apiKey  api key
      * @param  movieId movie id
-     * @return        {@link Observable<TrailersResponse>}
+     * @return        {@link Single<TrailersResponse>}
      */
     @GET("movie/{movie_id}/videos")
-    Observable<TrailersResponse> getTrailers(@Path("movie_id") int movieId, @Query("api_key") String apiKey);
+    Single<TrailersResponse> getTrailers(@Path("movie_id") int movieId, @Query("api_key") String apiKey);
 
     /**
      * Returns reviews for the selected movie
      *
      * @param  apiKey  api key
      * @param  movieId movie id
-     * @return        {@link Observable<ReviewsResponse>}
+     * @return        {@link Single<ReviewsResponse>}
      */
     @GET("movie/{movie_id}/reviews")
-    Observable<ReviewsResponse> getReviews(@Path("movie_id") int movieId, @Query("api_key") String apiKey);
+    Single<ReviewsResponse> getReviews(@Path("movie_id") int movieId, @Query("api_key") String apiKey);
 
 }

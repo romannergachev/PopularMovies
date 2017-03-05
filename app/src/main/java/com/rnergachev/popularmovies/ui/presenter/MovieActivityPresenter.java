@@ -8,7 +8,7 @@ import com.rnergachev.popularmovies.ui.view.MovieActivityView;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
@@ -42,7 +42,7 @@ public class MovieActivityPresenter {
      * @param  movieToUpdate  movie
      */
     public void updateFavoriteStatus(Movie movieToUpdate) {
-        Observable.just(movieToUpdate).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+        Single.just(movieToUpdate).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                 movie -> {
                     realm.beginTransaction();
                     RealmResults<Movie> movieFromRealm = realm.where(Movie.class).equalTo("id", movie.getId()).findAll();
@@ -64,7 +64,7 @@ public class MovieActivityPresenter {
      * @param  currentMovie  movie
      */
     public void getFavoriteStatus(Movie currentMovie) {
-        Observable.just(currentMovie).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+        Single.just(currentMovie).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                 movie -> {
                     RealmResults<Movie> movieFromRealm = realm.where(Movie.class).equalTo("id", movie.getId()).findAll();
                     if (movieFromRealm.size() != 0) {
