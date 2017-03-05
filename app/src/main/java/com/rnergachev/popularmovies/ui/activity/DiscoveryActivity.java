@@ -91,7 +91,7 @@ public class DiscoveryActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if (currentSort == getResources().getInteger(R.integer.favorites)) {
+        if (currentSort == getResources().getInteger(R.integer.favorites) && discoveryAdapter != null) {
             discoveryAdapter.fetchMovies();
         }
         if (gridLayoutManager!= null && currentPosition != null) {
