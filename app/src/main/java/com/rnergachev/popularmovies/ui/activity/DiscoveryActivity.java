@@ -83,6 +83,23 @@ public class DiscoveryActivity
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        currentPosition = gridLayoutManager.findFirstVisibleItemPosition();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (currentSort == getResources().getInteger(R.integer.favorites)) {
+            discoveryAdapter.fetchMovies();
+        }
+        if (gridLayoutManager!= null && currentPosition != null) {
+            gridLayoutManager.scrollToPosition(currentPosition);
+        }
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(getString(R.string.extra_position), gridLayoutManager.findFirstVisibleItemPosition());
@@ -132,8 +149,13 @@ public class DiscoveryActivity
         }
         gridLayoutManager.removeAllViews();
         currentSort = position;
-        discoveryAdapter.clearAdapter(position == 0);
+        discoveryAdapter.clearAdapter(position);
         currentPosition = null;
+        if (currentSort != getResources().getInteger(R.integer.favorites)) {
+            movieRecyclerView.addOnScrollListener(scrollListener);
+        } else {
+            movieRecyclerView.clearOnScrollListeners();
+        }
         discoveryAdapter.fetchMovies();
     }
 
@@ -164,7 +186,10 @@ public class DiscoveryActivity
                 discoveryAdapter.fetchMovies();
             }
         };
-        movieRecyclerView.addOnScrollListener(scrollListener);
+        if (currentSort != getResources().getInteger(R.integer.favorites)) {
+            movieRecyclerView.addOnScrollListener(scrollListener);
+        }
+
 
         if (currentPosition != null) {
             gridLayoutManager.scrollToPosition(currentPosition);

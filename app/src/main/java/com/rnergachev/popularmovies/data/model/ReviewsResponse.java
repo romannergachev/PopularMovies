@@ -10,7 +10,6 @@ import java.util.List;
 
 public class ReviewsResponse {
     private int page;
-    private int id;
     private List<Review> results;
     @SerializedName("total_results")
     private int totalResults;

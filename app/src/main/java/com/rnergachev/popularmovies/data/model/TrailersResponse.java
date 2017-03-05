@@ -7,7 +7,6 @@ import java.util.List;
  */
 
 public class TrailersResponse {
-    private int id;
     private List<Trailer> results;
 
     public List<Trailer> getTrailers() {

@@ -5,14 +5,18 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Movie model class for retrofit response
  *
  * Created by rnergachev on 27/01/2017.
  */
 
-public class Movie implements Parcelable {
+public class Movie extends RealmObject implements Parcelable {
     //Movie details layout contains title, release date, movie poster, vote average, and plot synopsis.
+    @PrimaryKey
     private int id;
     @SerializedName("poster_path")
     private String posterPath;
@@ -23,6 +27,10 @@ public class Movie implements Parcelable {
     private double popularity;
     @SerializedName("vote_average")
     private double voteAverage;
+
+    public Movie() {
+
+    }
 
     public Movie(int id, String posterPath, String overview, String releaseDate, String title, double popularity, double voteAverage) {
         this.id = id;

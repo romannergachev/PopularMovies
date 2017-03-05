@@ -4,6 +4,7 @@
     <string name="image_base_url">http://image.tmdb.org/t/p/w185//</string>
     <string name="error_message">An error has occurred. Please try again later.</string>
     <string name="thumbnail">Thumbnail</string>
+    <string name="movies">Movies</string>
     <string name="extra_movie">EXTRA_MOVIE</string>
     <string name="extra_position">EXTRA_POSITION</string>
     <string name="review_position">REVIEW_POSITION</string>
@@ -19,5 +20,6 @@
     <string-array name="sort_array">
         <item>Popular Movies</item>
         <item>Top Rated Movies</item>
+        <item>Favorites</item>
     </string-array>
 </resources>

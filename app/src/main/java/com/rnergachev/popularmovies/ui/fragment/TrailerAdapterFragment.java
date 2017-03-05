@@ -28,18 +28,6 @@ public class TrailerAdapterFragment extends Fragment {
     private boolean isInitial;
 
     /**
-     * Hold a reference to the parent Activity so we can report the
-     * task's current progress and results. The Android framework
-     * will pass us a reference to the newly created Activity after
-     * each configuration change.
-     */
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        callbacks = (AdapterCallbacks) context;
-    }
-
-    /**
      * This method will only be called once when the retained
      * Fragment is first created.
      */
@@ -60,7 +48,14 @@ public class TrailerAdapterFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        callbacks = (AdapterCallbacks) getActivity();
 
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        callbacks = null;
     }
 
     @Override
@@ -70,15 +65,5 @@ public class TrailerAdapterFragment extends Fragment {
             callbacks.setTrailerAdapter(trailerAdapter, isInitial);
         }
         isInitial = false;
-    }
-
-    /**
-     * Set the callback to null so we don't accidentally leak the
-     * Activity instance.
-     */
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        callbacks = null;
     }
 }

@@ -14,6 +14,8 @@ import com.rnergachev.popularmovies.R;
 import com.rnergachev.popularmovies.data.model.Movie;
 import com.rnergachev.popularmovies.data.model.MoviesResponse;
 import com.rnergachev.popularmovies.data.network.MovieApi;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -24,6 +26,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Adapter class for Movies list
@@ -37,16 +41,17 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
     private int maxPage;
     private Context context;
     private final DiscoveryAdapterHandler handler;
-    private boolean isPopularSort;
+    private int sortType;
     @Inject MovieApi movieApi;
+    @Inject Realm realm;
 
-    public DiscoveryAdapter(Activity activity, DiscoveryAdapterHandler handler, boolean isPopularSort) {
+    public DiscoveryAdapter(Activity activity, DiscoveryAdapterHandler handler, int sortType) {
         currentPage = 0;
         maxPage = Integer.MAX_VALUE;
         this.context = activity;
         this.handler = handler;
         movieList = new ArrayList<>();
-        this.isPopularSort = isPopularSort;
+        this.sortType = sortType;
         PopularMoviesApplication application = (PopularMoviesApplication) activity.getApplication();
         application.appComponent.inject(this);
     }
@@ -130,33 +135,51 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
         currentPage++;
         Log.d(getClass().getName(), "Fetching page: " + currentPage);
         Observable<MoviesResponse> request;
-        if (isPopularSort) {
-            request = movieApi.popularMovies(currentPage);
-        } else {
-            request = movieApi.topRatedMovies(currentPage);
+        switch (sortType) {
+            case 0: request = movieApi.popularMovies(currentPage); break;
+            case 1: request = movieApi.topRatedMovies(currentPage); break;
+            default: request = Observable.just(new MoviesResponse());
+
         }
 
         request.subscribe(
             response -> {
-                movieList.addAll(response.getMovies());
-                this.notifyDataSetChanged();
-                maxPage = response.getTotalPages();
-                handler.onFetchingEnded();
+                if (sortType == context.getResources().getInteger(R.integer.favorites)) {
+                    RealmResults<Movie> realmResults = realm.where(Movie.class).findAll();
+                    if (realmResults.size() == 0) {
+                        movieList.clear();
+                        this.notifyDataSetChanged();
+                        return;
+                    }
+                    movieList.clear();
+                    movieList.addAll(realmResults.subList(0, realmResults.size()));
+                    this.notifyDataSetChanged();
+                } else {
+                    movieList.addAll(response.getMovies());
+                    this.notifyDataSetChanged();
+                    maxPage = response.getTotalPages();
+                    handler.onFetchingEnded();
+                }
+
             },
             handler::onError
         );
 
     }
 
+    private Observable<List<Movie>> favorites() {
+        return null;
+    }
+
     /**
      * Clears adapter before fetch data with a new sort type
      *
-     * @param  isPopularSort new sort type
+     * @param  sortType new sort type
      */
-    public void clearAdapter(boolean isPopularSort) {
+    public void clearAdapter(int sortType) {
         currentPage = 0;
         maxPage = Integer.MAX_VALUE;
         movieList = new ArrayList<>();
-        this.isPopularSort = isPopularSort;
+        this.sortType = sortType;
     }
 }

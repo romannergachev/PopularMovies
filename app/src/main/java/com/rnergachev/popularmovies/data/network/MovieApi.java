@@ -1,9 +1,12 @@
 package com.rnergachev.popularmovies.data.network;
 
 import com.rnergachev.popularmovies.BuildConfig;
+import com.rnergachev.popularmovies.data.model.Movie;
 import com.rnergachev.popularmovies.data.model.MoviesResponse;
 import com.rnergachev.popularmovies.data.model.ReviewsResponse;
 import com.rnergachev.popularmovies.data.model.TrailersResponse;
+
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

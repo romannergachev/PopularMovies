@@ -1,22 +1,18 @@
 package com.rnergachev.popularmovies.ui.adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rnergachev.popularmovies.PopularMoviesApplication;
 import com.rnergachev.popularmovies.R;
-import com.rnergachev.popularmovies.data.model.Movie;
 import com.rnergachev.popularmovies.data.model.Review;
 import com.rnergachev.popularmovies.data.model.ReviewsResponse;
 import com.rnergachev.popularmovies.data.network.MovieApi;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,13 +33,11 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdap
     private List<Review> reviewList;
     private int currentPage;
     private int maxPage;
-    private Context context;
     @Inject MovieApi movieApi;
 
     public ReviewAdapter(Activity activity) {
         currentPage = 0;
         maxPage = Integer.MAX_VALUE;
-        this.context = activity;
         reviewList = new ArrayList<>();
         PopularMoviesApplication application = (PopularMoviesApplication) activity.getApplication();
         application.appComponent.inject(this);

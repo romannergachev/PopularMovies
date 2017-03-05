@@ -1,16 +1,16 @@
-package com.rnergachev.popularmovies.module;
+package com.rnergachev.popularmovies.di;
 
 import android.content.Context;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.rnergachev.popularmovies.R;
-import com.rnergachev.popularmovies.data.network.MovieApi;
 import com.rnergachev.popularmovies.data.network.MovieDbService;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.realm.Realm;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -30,6 +30,13 @@ public class ApplicationModule {
     @Singleton
     public Context provideContext() {
         return context;
+    }
+
+    @Provides
+    @Singleton
+    public Realm provideRealm() {
+        Realm.init(context);
+        return Realm.getDefaultInstance();
     }
 
     @Provides

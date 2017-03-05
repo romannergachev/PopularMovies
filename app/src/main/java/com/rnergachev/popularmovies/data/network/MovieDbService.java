@@ -4,8 +4,6 @@ import com.rnergachev.popularmovies.data.model.MoviesResponse;
 import com.rnergachev.popularmovies.data.model.ReviewsResponse;
 import com.rnergachev.popularmovies.data.model.TrailersResponse;
 
-import javax.inject.Singleton;
-
 import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

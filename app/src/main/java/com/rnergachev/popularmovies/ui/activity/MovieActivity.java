@@ -9,10 +9,13 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rnergachev.popularmovies.BuildConfig;
+import com.rnergachev.popularmovies.PopularMoviesApplication;
 import com.rnergachev.popularmovies.R;
 import com.rnergachev.popularmovies.data.model.Movie;
 import com.rnergachev.popularmovies.ui.adapter.ReviewAdapter;
@@ -20,10 +23,15 @@ import com.rnergachev.popularmovies.ui.adapter.TrailerAdapter;
 import com.rnergachev.popularmovies.ui.fragment.ReviewAdapterFragment;
 import com.rnergachev.popularmovies.ui.fragment.TrailerAdapterFragment;
 import com.rnergachev.popularmovies.ui.listener.EndlessRecyclerViewScrollListener;
+import com.rnergachev.popularmovies.ui.presenter.MovieActivityPresenter;
+import com.rnergachev.popularmovies.ui.view.MovieActivityView;
 import com.squareup.picasso.Picasso;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 
 /**
  * Activity with the details of the selected movie
@@ -32,7 +40,7 @@ import butterknife.ButterKnife;
  */
 
 public class MovieActivity extends AppCompatActivity
-        implements TrailerAdapterFragment.AdapterCallbacks, ReviewAdapterFragment.AdapterCallbacks{
+        implements TrailerAdapterFragment.AdapterCallbacks, ReviewAdapterFragment.AdapterCallbacks, MovieActivityView {
     private Movie movie;
 
     @BindView(R.id.movie_poster_image_view) ImageView poster;
@@ -43,6 +51,7 @@ public class MovieActivity extends AppCompatActivity
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.trailers_list) RecyclerView trailersRecyclerView;
     @BindView(R.id.reviews_list) RecyclerView reviewsRecyclerView;
+    @BindView(R.id.favorite) CheckBox favoriteCheckBox;
 
     private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
@@ -53,6 +62,8 @@ public class MovieActivity extends AppCompatActivity
     private EndlessRecyclerViewScrollListener scrollListener;
     private Integer currentPosition;
 
+    @Inject MovieActivityPresenter movieActivityPresenter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,11 +71,15 @@ public class MovieActivity extends AppCompatActivity
 
         ButterKnife.bind(this);
 
+        PopularMoviesApplication application = (PopularMoviesApplication) getApplication();
+        application.appComponent.inject(this);
+
         //configure toolbar
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getString(R.string.movies));
         toolbar.setNavigationOnClickListener(arrow -> onBackPressed());
 
         //restore movie from extras as parcelable
@@ -95,6 +110,20 @@ public class MovieActivity extends AppCompatActivity
             fm.beginTransaction().add(reviewAdapterFragment, getString(R.string.tag_review_adapter_fragment)).commit();
         }
 
+        favoriteCheckBox.setOnClickListener(v -> movieActivityPresenter.updateFavoriteStatus(movie));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        movieActivityPresenter.onStart(this);
+        movieActivityPresenter.getFavoriteStatus(movie);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        movieActivityPresenter.onStop();
     }
 
     @Override
@@ -154,5 +183,10 @@ public class MovieActivity extends AppCompatActivity
         if(isInitial) {
             trailerAdapter.fetchTrailers(movie.getId());
         }
+    }
+
+    @Override
+    public void setFavoriteState(boolean state) {
+        favoriteCheckBox.setChecked(state);
     }
 }
