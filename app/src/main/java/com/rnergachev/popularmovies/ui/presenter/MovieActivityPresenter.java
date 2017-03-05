@@ -10,6 +10,7 @@ import javax.inject.Singleton;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -24,6 +25,7 @@ import io.realm.RealmResults;
 public class MovieActivityPresenter {
     @Inject Realm realm;
     private MovieActivityView view;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Inject MovieActivityPresenter() {
     }
@@ -34,6 +36,7 @@ public class MovieActivityPresenter {
 
     public void onStop() {
         this.view = null;
+        compositeDisposable.clear();
     }
 
     /**
@@ -42,7 +45,7 @@ public class MovieActivityPresenter {
      * @param  movieToUpdate  movie
      */
     public void updateFavoriteStatus(Movie movieToUpdate) {
-        Single.just(movieToUpdate).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+        compositeDisposable.add(Single.just(movieToUpdate).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                 movie -> {
                     realm.beginTransaction();
                     RealmResults<Movie> movieFromRealm = realm.where(Movie.class).equalTo("id", movie.getId()).findAll();
@@ -55,7 +58,7 @@ public class MovieActivityPresenter {
                     realm.commitTransaction();
                 },
                 this::showError
-        );
+        ));
     }
 
     /**
@@ -64,7 +67,7 @@ public class MovieActivityPresenter {
      * @param  currentMovie  movie
      */
     public void getFavoriteStatus(Movie currentMovie) {
-        Single.just(currentMovie).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+        compositeDisposable.add(Single.just(currentMovie).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                 movie -> {
                     RealmResults<Movie> movieFromRealm = realm.where(Movie.class).equalTo("id", movie.getId()).findAll();
                     if (movieFromRealm.size() != 0) {
@@ -74,7 +77,7 @@ public class MovieActivityPresenter {
                     }
                 },
                 this::showError
-        );
+        ));
     }
 
     /**
