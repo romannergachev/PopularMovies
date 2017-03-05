@@ -8,7 +8,7 @@ import com.rnergachev.popularmovies.ui.activity.MovieActivity;
 import com.rnergachev.popularmovies.ui.adapter.TrailerAdapter;
 
 /**
- * Fragment for trailer background tasks
+ * Fragment for retention of trailer adapter
  *
  * Created by rnergachev on 03/03/2017.
  */

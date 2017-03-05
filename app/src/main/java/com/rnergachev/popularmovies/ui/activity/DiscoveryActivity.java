@@ -163,6 +163,11 @@ public class DiscoveryActivity
     public void onNothingSelected(AdapterView<?> parent) {
     }
 
+    /**
+     * Sets the adapter to the recycler view
+     *
+     * @param  adapter restored or created adapter
+     */
     @Override
     public void setAdapter(DiscoveryAdapter adapter) {
         discoveryAdapter   = adapter;

@@ -138,6 +138,12 @@ public class MovieActivity extends AppCompatActivity
         currentPosition = savedInstanceState.getInt(getString(R.string.review_position));
     }
 
+    /**
+     * Sets review adapter
+     *
+     * @param  adapter   adapter to set
+     * @param  isInitial is initial?
+     */
     @Override
     public void setReviewAdapter(ReviewAdapter adapter, boolean isInitial) {
         reviewAdapter = adapter;
@@ -166,6 +172,12 @@ public class MovieActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Sets trailer restored or created trailer adapter
+     *
+     * @param  adapter   adapter to set
+     * @param  isInitial is initial?
+     */
     @Override
     public void setTrailerAdapter(TrailerAdapter adapter, boolean isInitial) {
         trailerAdapter = adapter;
@@ -185,6 +197,11 @@ public class MovieActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Set favorite state
+     *
+     * @param  state favorite state
+     */
     @Override
     public void setFavoriteState(boolean state) {
         favoriteCheckBox.setChecked(state);

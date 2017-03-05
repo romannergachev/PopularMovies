@@ -1,14 +1,13 @@
 package com.rnergachev.popularmovies.ui.fragment;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 
 import com.rnergachev.popularmovies.ui.activity.DiscoveryActivity;
 import com.rnergachev.popularmovies.ui.adapter.DiscoveryAdapter;
 
 /**
- * Fragment for background tasks
+ * Fragment for retention of discovery adapter
  *
  * Created by rnergachev on 03/03/2017.
  */

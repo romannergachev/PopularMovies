@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
+ * Model class for Review request
+ *
  * Created by rnergachev on 03/03/2017.
  */
 

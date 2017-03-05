@@ -8,7 +8,7 @@ import com.rnergachev.popularmovies.ui.activity.MovieActivity;
 import com.rnergachev.popularmovies.ui.adapter.ReviewAdapter;
 
 /**
- * Fragment for review background tasks
+ * Fragment for retention of review adapter
  *
  * Created by rnergachev on 03/03/2017.
  */

@@ -9,6 +9,8 @@ import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
 /**
+ * Application class for dagger init and picasso config
+ *
  * Created by rnergachev on 03/03/2017.
  */
 

@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
+ * Trailer model class for retrofit response
+ *
  * Created by rnergachev on 03/03/2017.
  */
 

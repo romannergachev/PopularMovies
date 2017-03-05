@@ -1,6 +1,5 @@
 package com.rnergachev.popularmovies.ui.presenter;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.rnergachev.popularmovies.data.model.Movie;
@@ -16,6 +15,8 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 /**
+ * MovieActivity presenter
+ *
  * Created by rnergachev on 05/03/2017.
  */
 
@@ -35,6 +36,11 @@ public class MovieActivityPresenter {
         this.view = null;
     }
 
+    /**
+     * Update the favorite status of the movie
+     *
+     * @param  movieToUpdate  movie
+     */
     public void updateFavoriteStatus(Movie movieToUpdate) {
         Observable.just(movieToUpdate).subscribeOn(AndroidSchedulers.mainThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                 movie -> {
@@ -45,7 +51,6 @@ public class MovieActivityPresenter {
                     } else {
                         movieFromRealm.deleteAllFromRealm();
                     }
-                    //view.update
 
                     realm.commitTransaction();
                 },
@@ -53,10 +58,14 @@ public class MovieActivityPresenter {
         );
     }
 
+    /**
+     * Check and provide favorite status for the current movie
+     *
+     * @param  currentMovie  movie
+     */
     public void getFavoriteStatus(Movie currentMovie) {
         Observable.just(currentMovie).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                 movie -> {
-                    RealmResults<Movie> movieFromRealmWW = realm.where(Movie.class).findAll();
                     RealmResults<Movie> movieFromRealm = realm.where(Movie.class).equalTo("id", movie.getId()).findAll();
                     if (movieFromRealm.size() != 0) {
                         view.setFavoriteState(true);
@@ -68,6 +77,11 @@ public class MovieActivityPresenter {
         );
     }
 
+    /**
+     * Show error
+     *
+     * @param  exception  exception
+     */
     private void showError(Throwable exception) {
         Log.d(this.getClass().getName(), exception.getMessage());
     }

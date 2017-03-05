@@ -78,7 +78,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdap
     }
 
     /**
-     * Fetches the movies (popular or top rated) and add them to the reviewList
+     * Fetches reviews and adds them to the list
      *
      */
     public void fetchReviews(int movieId) {

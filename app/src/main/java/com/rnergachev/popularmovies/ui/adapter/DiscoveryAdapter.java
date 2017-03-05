@@ -123,7 +123,7 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
     }
 
     /**
-     * Fetches the movies (popular or top rated) and add them to the movieList
+     * Fetches the movies (popular or top rated, or favorites from DB) and add them to the movieList
      *
      */
     public void fetchMovies() {
@@ -165,10 +165,6 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
             handler::onError
         );
 
-    }
-
-    private Observable<List<Movie>> favorites() {
-        return null;
     }
 
     /**

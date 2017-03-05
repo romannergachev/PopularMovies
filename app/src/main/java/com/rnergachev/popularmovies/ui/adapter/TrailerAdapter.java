@@ -86,7 +86,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerA
     }
 
     /**
-     * Fetches the movies (popular or top rated) and add them to the movieList
+     * Fetches trailers and add them to the list
      *
      */
     public void fetchTrailers(int movieId) {
