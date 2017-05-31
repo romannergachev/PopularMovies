@@ -9,7 +9,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,7 +30,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
 
 /**
  * Activity with the details of the selected movie
@@ -79,11 +77,11 @@ public class MovieActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(getString(R.string.movies));
+        getSupportActionBar().setTitle(getString(R.string.tv_shows));
         toolbar.setNavigationOnClickListener(arrow -> onBackPressed());
 
         //restore movie from extras as parcelable
-        movie = getIntent().getParcelableExtra(getString(R.string.extra_movie));
+        movie = getIntent().getParcelableExtra(getString(R.string.extra_tv_show));
 
         currentPosition = null;
 

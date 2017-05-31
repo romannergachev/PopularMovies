@@ -4,6 +4,7 @@ import com.rnergachev.popularmovies.BuildConfig;
 import com.rnergachev.popularmovies.data.model.Movie;
 import com.rnergachev.popularmovies.data.model.MoviesResponse;
 import com.rnergachev.popularmovies.data.model.ReviewsResponse;
+import com.rnergachev.popularmovies.data.model.TVShowResponse;
 import com.rnergachev.popularmovies.data.model.TrailersResponse;
 
 import javax.inject.Inject;
@@ -29,7 +30,7 @@ public class MovieApi {
     }
 
     /**
-     * Returns popular movies as an Single object
+     * Returns popular movies as a Single object
      *
      * @param  page   number of current page
      * @return        {@link Single<MoviesResponse>}
@@ -39,7 +40,7 @@ public class MovieApi {
     }
 
     /**
-     * Returns top rated movies as an Single object
+     * Returns top rated movies as a Single object
      *
      * @param  page   number of current page
      * @return        {@link Single<MoviesResponse>}
@@ -49,7 +50,27 @@ public class MovieApi {
     }
 
     /**
-     * Returns trailers as an Single object
+     * Returns top rated tv shows as a Single object
+     *
+     * @param  page   number of current page
+     * @return        {@link Single<TVShowResponse>}
+     */
+    public Single<TVShowResponse> topRatedTVShows(int page) {
+        return applySchedulers(movieDbService.topRatedTVShows(BuildConfig.THE_MOVIE_DB_API_KEY, page));
+    }
+
+    /**
+     * Returns similar tv shows as a Single object
+     *
+     * @param  tvId   movie id
+     * @return        {@link Single<TVShowResponse>}
+     */
+    public Single<TVShowResponse> similarTVShows(int tvId, int page) {
+        return applySchedulers(movieDbService.similarTVShows(tvId, BuildConfig.THE_MOVIE_DB_API_KEY, page));
+    }
+
+    /**
+     * Returns trailers as a Single object
      *
      * @param  movieId   movie id
      * @return        {@link Single<TrailersResponse>}
@@ -59,7 +80,7 @@ public class MovieApi {
     }
 
     /**
-     * Returns reviews as an Single object
+     * Returns reviews as a Single object
      *
      * @param  movieId   movie id
      * @return        {@link Single<ReviewsResponse>}

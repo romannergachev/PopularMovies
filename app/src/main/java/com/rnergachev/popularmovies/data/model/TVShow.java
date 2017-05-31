@@ -9,35 +9,31 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
- * Movie model class for retrofit response
+ * TVShows model class for retrofit response
  *
  * Created by rnergachev on 27/01/2017.
  */
 
-public class Movie extends RealmObject implements Parcelable {
+public class TVShow implements Parcelable {
     //Movie details layout contains title, release date, movie poster, vote average, and plot synopsis.
-    @PrimaryKey
     private int id;
     @SerializedName("poster_path")
     private String posterPath;
     private String overview;
-    @SerializedName("release_date")
-    private String releaseDate;
-    private String title;
+    private String name;
     private double popularity;
     @SerializedName("vote_average")
     private double voteAverage;
 
-    public Movie() {
+    public TVShow() {
 
     }
 
-    public Movie(int id, String posterPath, String overview, String releaseDate, String title, double popularity, double voteAverage) {
+    public TVShow(int id, String posterPath, String overview, String releaseDate, String title, double popularity, double voteAverage) {
         this.id = id;
         this.posterPath = posterPath;
         this.overview = overview;
-        this.releaseDate = releaseDate;
-        this.title =title;
+        this.name =title;
         this.popularity =  popularity;
         this.voteAverage = voteAverage;
     }
@@ -50,12 +46,8 @@ public class Movie extends RealmObject implements Parcelable {
         return overview;
     }
 
-    public String getReleaseDate() {
-        return releaseDate;
-    }
-
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
     public double getPopularity() {
@@ -80,31 +72,29 @@ public class Movie extends RealmObject implements Parcelable {
         dest.writeInt(this.id);
         dest.writeString(this.posterPath);
         dest.writeString(this.overview);
-        dest.writeString(this.releaseDate);
-        dest.writeString(this.title);
+        dest.writeString(this.name);
         dest.writeDouble(this.popularity);
         dest.writeDouble(this.voteAverage);
     }
 
-    protected Movie(Parcel in) {
+    protected TVShow(Parcel in) {
         this.id = in.readInt();
         this.posterPath = in.readString();
         this.overview = in.readString();
-        this.releaseDate = in.readString();
-        this.title = in.readString();
+        this.name = in.readString();
         this.popularity = in.readDouble();
         this.voteAverage = in.readDouble();
     }
 
-    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+    public static final Creator<TVShow> CREATOR = new Creator<TVShow>() {
         @Override
-        public Movie createFromParcel(Parcel source) {
-            return new Movie(source);
+        public TVShow createFromParcel(Parcel source) {
+            return new TVShow(source);
         }
 
         @Override
-        public Movie[] newArray(int size) {
-            return new Movie[size];
+        public TVShow[] newArray(int size) {
+            return new TVShow[size];
         }
     };
 }
