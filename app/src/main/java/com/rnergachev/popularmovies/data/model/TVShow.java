@@ -5,9 +5,6 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-
 /**
  * TVShows model class for retrofit response
  *
@@ -15,7 +12,7 @@ import io.realm.annotations.PrimaryKey;
  */
 
 public class TVShow implements Parcelable {
-    //Movie details layout contains title, release date, movie poster, vote average, and plot synopsis.
+    //TV Show details fragment_tv_show contains title, movie poster, vote average, and plot synopsis.
     private int id;
     @SerializedName("poster_path")
     private String posterPath;
