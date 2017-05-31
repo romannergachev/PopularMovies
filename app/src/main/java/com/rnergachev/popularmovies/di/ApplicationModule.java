@@ -4,13 +4,12 @@ import android.content.Context;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.rnergachev.popularmovies.R;
-import com.rnergachev.popularmovies.data.network.MovieDbService;
+import com.rnergachev.popularmovies.data.network.TVShowDbService;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import io.realm.Realm;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -36,20 +35,13 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    public Realm provideRealm() {
-        Realm.init(context);
-        return Realm.getDefaultInstance();
-    }
-
-    @Provides
-    @Singleton
-    public MovieDbService provideMovieDbService() {
+    public TVShowDbService provideMovieDbService() {
         Retrofit retrofit = new Retrofit.Builder()
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(context.getString(R.string.base_url))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        return retrofit.create(MovieDbService.class);
+        return retrofit.create(TVShowDbService.class);
     }
 }
