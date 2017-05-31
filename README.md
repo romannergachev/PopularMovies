@@ -1,6 +1,6 @@
-# Popular Movies project for Udacity.
+# Top TV Shows Project.
 
-This is an android app that can show the list of popular movies and detailed info about each one of the movie.
+This is an android app that can show the list of top tv shows and detailed info about each one of the movie.
 
 Dependancies:
 * Retrofit2
