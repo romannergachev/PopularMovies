@@ -4,22 +4,12 @@
     <string name="image_base_url">http://image.tmdb.org/t/p/w185//</string>
     <string name="error_message">An error has occurred. Please try again later.</string>
     <string name="thumbnail">Thumbnail</string>
-    <string name="movies">Movies</string>
-    <string name="extra_movie">EXTRA_MOVIE</string>
+    <string name="tv_shows">TV Shows</string>
+    <string name="extra_tv_show">EXTRA_TV_SHOW</string>
     <string name="extra_position">EXTRA_POSITION</string>
-    <string name="review_position">REVIEW_POSITION</string>
-    <string name="sort_type">SORT_TYPE</string>
     <string name="tag_adapter_fragment">adapter_fragment</string>
-    <string name="tag_trailer_adapter_fragment">trailer_adapter_fragment</string>
-    <string name="tag_review_adapter_fragment">review_adapter_fragment</string>
     <string name="utube_thmb_path">http://img.youtube.com/vi/</string>
     <string name="utube_thmb">/0.jpg</string>
     <string name="votes">/10</string>
-
-
-    <string-array name="sort_array">
-        <item>Popular Movies</item>
-        <item>Top Rated Movies</item>
-        <item>Favorites</item>
-    </string-array>
+    <string name="transition_image">TRANSITION_IMAGE</string>
 </resources>
