@@ -1,9 +1,9 @@
 package com.rnergachev.popularmovies.di;
 
-import com.rnergachev.popularmovies.ui.activity.MovieActivity;
+
+import com.rnergachev.popularmovies.ui.activity.TVShowActivity;
 import com.rnergachev.popularmovies.ui.adapter.DiscoveryAdapter;
-import com.rnergachev.popularmovies.ui.adapter.ReviewAdapter;
-import com.rnergachev.popularmovies.ui.adapter.TrailerAdapter;
+import com.rnergachev.popularmovies.ui.fragment.TVShowFragment;
 
 import javax.inject.Singleton;
 
@@ -22,7 +22,6 @@ import dagger.Component;
 public interface ApplicationComponent {
     // inject context and movieDbService
     void inject(DiscoveryAdapter discoveryAdapter);
-    void inject(ReviewAdapter reviewAdapter);
-    void inject(TrailerAdapter trailerAdapter);
-    void inject(MovieActivity movieActivity);
+    void inject(TVShowActivity tvShowActivity);
+    void inject(TVShowFragment tvShowFragment);
 }

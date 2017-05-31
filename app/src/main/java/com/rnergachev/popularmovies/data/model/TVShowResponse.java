@@ -5,24 +5,24 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
- * Model class for Movies request
+ * Model class for TVShows request
  *
  * Created by roman on 28.1.2017.
  */
 
-public class MoviesResponse {
+public class TVShowResponse {
     private int page;
-    private List<Movie> results;
+    private List<TVShow> results;
     @SerializedName("total_results")
     private int totalResults;
     @SerializedName("total_pages")
     private int totalPages;
 
-    public List<Movie> getMovies() {
+    public List<TVShow> getTVShows() {
         return results;
     }
 
-    public int getTotalMovies() {
+    public int getTotalTVShows() {
         return totalResults;
     }
 

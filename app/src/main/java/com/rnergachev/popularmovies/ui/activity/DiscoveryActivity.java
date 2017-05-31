@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,14 +12,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.rnergachev.popularmovies.BuildConfig;
 import com.rnergachev.popularmovies.R;
-import com.rnergachev.popularmovies.data.model.Movie;
+import com.rnergachev.popularmovies.data.model.TVShow;
 import com.rnergachev.popularmovies.ui.adapter.DiscoveryAdapter;
 import com.rnergachev.popularmovies.ui.fragment.DiscoveryAdapterFragment;
 import com.rnergachev.popularmovies.ui.listener.EndlessRecyclerViewScrollListener;
@@ -27,23 +26,21 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Activity with the list of the movies
+ * Activity with the list of the tv shows
  *
  * Created by rnergachev on 27/01/2017.
  */
 
 public class DiscoveryActivity
     extends AppCompatActivity
-    implements DiscoveryAdapter.DiscoveryAdapterHandler, AdapterView.OnItemSelectedListener, DiscoveryAdapterFragment.AdapterCallbacks
+    implements DiscoveryAdapter.DiscoveryAdapterHandler, DiscoveryAdapterFragment.AdapterCallbacks
 {
-    @BindView(R.id.movies_list) RecyclerView movieRecyclerView;
+    @BindView(R.id.tv_show_list) RecyclerView tvShowsRecyclerView;
     @BindView(R.id.tv_error_message_display) TextView errorMessageDisplay;
     @BindView(R.id.pb_loading_indicator) ProgressBar loadingIndicator;
     @BindView(R.id.my_toolbar) Toolbar toolbar;
-    @BindView(R.id.spinner_sort) Spinner spinner;
     private EndlessRecyclerViewScrollListener scrollListener;
     private GridLayoutManager gridLayoutManager;
-    private int currentSort;
     private Integer currentPosition;
     private DiscoveryAdapter discoveryAdapter;
     private DiscoveryAdapterFragment discoveryAdapterFragment;
@@ -58,18 +55,7 @@ public class DiscoveryActivity
         currentPosition = null;
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        //add and configure spinner
-        currentSort = 0;
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-            this,
-            R.array.sort_array,
-            android.R.layout.simple_spinner_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
+        getSupportActionBar().setTitle(R.string.tv_shows);
 
         FragmentManager fm = getFragmentManager();
         discoveryAdapterFragment = (DiscoveryAdapterFragment) fm.findFragmentByTag(getString(R.string.tag_adapter_fragment));
@@ -91,9 +77,6 @@ public class DiscoveryActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if (currentSort == getResources().getInteger(R.integer.favorites) && discoveryAdapter != null) {
-            discoveryAdapter.fetchMovies();
-        }
         if (gridLayoutManager!= null && currentPosition != null) {
             gridLayoutManager.scrollToPosition(currentPosition);
         }
@@ -103,21 +86,22 @@ public class DiscoveryActivity
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(getString(R.string.extra_position), gridLayoutManager.findFirstVisibleItemPosition());
-        outState.putInt(getString(R.string.sort_type), currentSort);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         currentPosition = savedInstanceState.getInt(getString(R.string.extra_position));
-        currentSort = savedInstanceState.getInt(getString(R.string.sort_type));
     }
 
     @Override
-    public void onClick(Movie movie) {
-        Intent intent = new Intent(this, MovieActivity.class);
-        intent.putExtra(getString(R.string.extra_movie), movie);
-        startActivity(intent);
+    public void onClick(TVShow tvShow, View view) {
+        Intent intent = new Intent(this, TVShowActivity.class);
+        intent.putExtra(getString(R.string.extra_tv_show), tvShow);
+
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+            makeSceneTransitionAnimation(this, view, getString(R.string.transition_image));
+        startActivity(intent, options.toBundle());
     }
 
     @Override
@@ -142,27 +126,6 @@ public class DiscoveryActivity
         loadingIndicator.setVisibility(View.INVISIBLE);
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (currentSort == position) {
-            return;
-        }
-        gridLayoutManager.removeAllViews();
-        currentSort = position;
-        discoveryAdapter.clearAdapter(position);
-        currentPosition = null;
-        if (currentSort != getResources().getInteger(R.integer.favorites)) {
-            movieRecyclerView.addOnScrollListener(scrollListener);
-        } else {
-            movieRecyclerView.clearOnScrollListeners();
-        }
-        discoveryAdapter.fetchMovies();
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-    }
-
     /**
      * Sets the adapter to the recycler view
      *
@@ -179,27 +142,25 @@ public class DiscoveryActivity
             gridLayoutManager   = new GridLayoutManager(this, BuildConfig.NUMBER_OF_COLUMNS_LAND);
         }
 
-        movieRecyclerView.setLayoutManager(gridLayoutManager);
-        movieRecyclerView.setAdapter(discoveryAdapter);
+        tvShowsRecyclerView.setLayoutManager(gridLayoutManager);
+        tvShowsRecyclerView.setAdapter(discoveryAdapter);
 
-        //movieRecyclerView.addItemDecoration(new RecyclerViewItemDecorator(0));
+        //tvShowsRecyclerView.addItemDecoration(new RecyclerViewItemDecorator(0));
 
         //add view scroll listener to check the end of the list and fetch new data
         scrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                discoveryAdapter.fetchMovies();
+                discoveryAdapter.fetchTVShows();
             }
         };
-        if (currentSort != getResources().getInteger(R.integer.favorites)) {
-            movieRecyclerView.addOnScrollListener(scrollListener);
-        }
+        tvShowsRecyclerView.addOnScrollListener(scrollListener);
 
 
         if (currentPosition != null) {
             gridLayoutManager.scrollToPosition(currentPosition);
         } else {
-            discoveryAdapter.fetchMovies();
+            discoveryAdapter.fetchTVShows();
         }
     }
 }
