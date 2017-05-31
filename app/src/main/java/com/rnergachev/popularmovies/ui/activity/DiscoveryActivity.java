@@ -45,6 +45,8 @@ public class DiscoveryActivity
     private DiscoveryAdapter discoveryAdapter;
     private DiscoveryAdapterFragment discoveryAdapterFragment;
 
+    private static final int NUMBER_OF_COLUMNS = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +82,7 @@ public class DiscoveryActivity
         if (gridLayoutManager!= null && currentPosition != null) {
             gridLayoutManager.scrollToPosition(currentPosition);
         }
+
     }
 
     @Override
@@ -135,12 +138,8 @@ public class DiscoveryActivity
     public void setAdapter(DiscoveryAdapter adapter) {
         discoveryAdapter   = adapter;
 
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            gridLayoutManager   = new GridLayoutManager(this, BuildConfig.NUMBER_OF_COLUMNS_PORT);
-        }
-        else{
-            gridLayoutManager   = new GridLayoutManager(this, BuildConfig.NUMBER_OF_COLUMNS_LAND);
-        }
+        gridLayoutManager   = new GridLayoutManager(this, NUMBER_OF_COLUMNS);
+
 
         tvShowsRecyclerView.setLayoutManager(gridLayoutManager);
         tvShowsRecyclerView.setAdapter(discoveryAdapter);
