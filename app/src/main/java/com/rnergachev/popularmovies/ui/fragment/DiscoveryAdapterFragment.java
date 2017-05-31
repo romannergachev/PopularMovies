@@ -39,7 +39,7 @@ public class DiscoveryAdapterFragment extends Fragment {
         DiscoveryActivity discoveryActivity = (DiscoveryActivity) getActivity();
 
         // Create and execute the background task.
-        discoveryAdapter = new DiscoveryAdapter(discoveryActivity, discoveryActivity, 0);
+        discoveryAdapter = new DiscoveryAdapter(discoveryActivity, discoveryActivity);
     }
 
     @Override

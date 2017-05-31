@@ -8,12 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.rnergachev.popularmovies.PopularMoviesApplication;
 import com.rnergachev.popularmovies.R;
-import com.rnergachev.popularmovies.data.model.Movie;
-import com.rnergachev.popularmovies.data.model.MoviesResponse;
-import com.rnergachev.popularmovies.data.network.MovieApi;
+import com.rnergachev.popularmovies.data.model.TVShow;
+import com.rnergachev.popularmovies.data.network.TVShowApi;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -23,44 +23,39 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Single;
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 /**
- * Adapter class for Movies list
+ * Adapter class for TV shows list
  *
  * Created by roman on 28.1.2017.
  */
 
 public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.DiscoveryAdapterViewHolder> {
-    private List<Movie> movieList;
+    private List<TVShow> tvShowList;
     private int currentPage;
     private int maxPage;
     private Context context;
     private final DiscoveryAdapterHandler handler;
-    private int sortType;
-    @Inject MovieApi movieApi;
-    @Inject Realm realm;
+    @Inject TVShowApi tvShowApi;
 
-    public DiscoveryAdapter(Activity activity, DiscoveryAdapterHandler handler, int sortType) {
+    public DiscoveryAdapter(Activity activity, DiscoveryAdapterHandler handler) {
         currentPage = 0;
         maxPage = Integer.MAX_VALUE;
         this.context = activity;
         this.handler = handler;
-        movieList = new ArrayList<>();
-        this.sortType = sortType;
+        tvShowList = new ArrayList<>();
         PopularMoviesApplication application = (PopularMoviesApplication) activity.getApplication();
         application.appComponent.inject(this);
     }
 
     public interface DiscoveryAdapterHandler {
         /**
-         * Performs the movie selection
+         * Performs the tv show selection
          *
-         * @param  movie that has been selected
+         * @param  tvShow that has been selected
+         * @param view
          */
-        void onClick(Movie movie);
+        void onClick(TVShow tvShow, View view);
         /**
          * Returns the error
          *
@@ -86,7 +81,9 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
      */
     class DiscoveryAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @BindView(R.id.movie_thumbnail_image_view) ImageView movieThumbnail;
+        @BindView(R.id.tv_show_thumbnail_image_view) ImageView tvShowThumbnail;
+        @BindView(R.id.name) TextView name;
+        @BindView(R.id.vote_average) TextView voteAverage;
 
         DiscoveryAdapterViewHolder(View view) {
             super(view);
@@ -97,8 +94,8 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            Movie movie = movieList.get(adapterPosition);
-            handler.onClick(movie);
+            TVShow tvShow = tvShowList.get(adapterPosition);
+            handler.onClick(tvShow, v.findViewById(R.id.tv_show_thumbnail_image_view));
         }
     }
 
@@ -110,21 +107,23 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
 
     @Override
     public void onBindViewHolder(DiscoveryAdapterViewHolder holder, int position) {
-        String movieUrl = movieList.get(position).getPosterPath();
-        Picasso.with(context).load(context.getString(R.string.image_base_url) + movieUrl).into(holder.movieThumbnail);
+        String tvShowUrl = tvShowList.get(position).getPosterPath();
+        Picasso.with(context).load(context.getString(R.string.image_base_url) + tvShowUrl).into(holder.tvShowThumbnail);
+        holder.name.setText(tvShowList.get(position).getName());
+        holder.voteAverage.setText(String.valueOf(tvShowList.get(position).getVoteAverage()));
     }
 
     @Override
     public int getItemCount() {
-        if (null == movieList) return 0;
-        return movieList.size();
+        if (null == tvShowList) return 0;
+        return tvShowList.size();
     }
 
     /**
-     * Fetches the movies (popular or top rated, or favorites from DB) and add them to the movieList
+     * Fetches the tv shows (popular or top rated, or favorites from DB) and add them to the tvShowList
      *
      */
-    public void fetchMovies() {
+    public void fetchTVShows() {
         if (currentPage == maxPage) {
             return;
         }
@@ -132,32 +131,13 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
         handler.onFetchingStarted();
         currentPage++;
         Log.d(getClass().getName(), "Fetching page: " + currentPage);
-        Single<MoviesResponse> request;
-        switch (sortType) {
-            case 0: request = movieApi.popularMovies(currentPage); break;
-            case 1: request = movieApi.topRatedMovies(currentPage); break;
-            default: request = Single.just(new MoviesResponse());
 
-        }
-
-        request.subscribe(
+        tvShowApi.topRatedTVShows(currentPage).subscribe(
             response -> {
-                if (sortType == context.getResources().getInteger(R.integer.favorites)) {
-                    RealmResults<Movie> realmResults = realm.where(Movie.class).findAll();
-                    if (realmResults.size() == 0) {
-                        movieList.clear();
-                        this.notifyDataSetChanged();
-                        return;
-                    }
-                    movieList.clear();
-                    movieList.addAll(realmResults.subList(0, realmResults.size()));
-                    this.notifyDataSetChanged();
-                } else {
-                    movieList.addAll(response.getMovies());
-                    this.notifyDataSetChanged();
-                    maxPage = response.getTotalPages();
-                    handler.onFetchingEnded();
-                }
+                tvShowList.addAll(response.getTVShows());
+                this.notifyDataSetChanged();
+                maxPage = response.getTotalPages();
+                handler.onFetchingEnded();
 
             },
             handler::onError
@@ -173,7 +153,6 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
     public void clearAdapter(int sortType) {
         currentPage = 0;
         maxPage = Integer.MAX_VALUE;
-        movieList = new ArrayList<>();
-        this.sortType = sortType;
+        tvShowList = new ArrayList<>();
     }
 }
