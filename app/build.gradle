@@ -13,8 +13,6 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField "String", "THE_MOVIE_DB_API_KEY",  "\"$api_key\""
-        buildConfigField "int", "NUMBER_OF_COLUMNS_PORT",  "$number_of_columns_port"
-        buildConfigField "int", "NUMBER_OF_COLUMNS_LAND",  "$number_of_columns_land"
 
     }
     buildTypes {
