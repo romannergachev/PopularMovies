@@ -16,7 +16,6 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.rnergachev.popularmovies.BuildConfig;
 import com.rnergachev.popularmovies.R;
 import com.rnergachev.popularmovies.data.model.Movie;
 import com.rnergachev.popularmovies.ui.adapter.DiscoveryAdapter;
@@ -28,27 +27,28 @@ import butterknife.ButterKnife;
 
 /**
  * Activity with the list of the movies
- *
+ * <p>
  * Created by rnergachev on 27/01/2017.
  */
 
 public class DiscoveryActivity
     extends AppCompatActivity
-    implements DiscoveryAdapter.DiscoveryAdapterHandler, AdapterView.OnItemSelectedListener, DiscoveryAdapterFragment.AdapterCallbacks
-{
-    @BindView(R.id.movies_list) RecyclerView movieRecyclerView;
-    @BindView(R.id.tv_error_message_display) TextView errorMessageDisplay;
-    @BindView(R.id.pb_loading_indicator) ProgressBar loadingIndicator;
-    @BindView(R.id.my_toolbar) Toolbar toolbar;
-    @BindView(R.id.spinner_sort) Spinner spinner;
+    implements DiscoveryAdapter.DiscoveryAdapterHandler, AdapterView.OnItemSelectedListener, DiscoveryAdapterFragment.AdapterCallbacks {
+    @BindView(R.id.movies_list)
+    RecyclerView movieRecyclerView;
+    @BindView(R.id.tv_error_message_display)
+    TextView errorMessageDisplay;
+    @BindView(R.id.pb_loading_indicator)
+    ProgressBar loadingIndicator;
+    @BindView(R.id.my_toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.spinner_sort)
+    Spinner spinner;
     private EndlessRecyclerViewScrollListener scrollListener;
     private GridLayoutManager gridLayoutManager;
-    //todo create enum
     private int currentSort;
-    //todo change to int
-    private Integer currentPosition;
+    private int currentPosition;
     private DiscoveryAdapter discoveryAdapter;
-    private DiscoveryAdapterFragment discoveryAdapterFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,27 +57,15 @@ public class DiscoveryActivity
 
         ButterKnife.bind(this);
 
-        currentPosition = null;
-
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        //add and configure spinner
-        //todo possibly move to a method
         currentSort = 0;
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-            this,
-            R.array.sort_array,
-            android.R.layout.simple_spinner_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //todo end
 
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
+        createSpinner();
 
         FragmentManager fm = getFragmentManager();
-        discoveryAdapterFragment = (DiscoveryAdapterFragment) fm.findFragmentByTag(getString(R.string.tag_adapter_fragment));
+        DiscoveryAdapterFragment discoveryAdapterFragment = (DiscoveryAdapterFragment) fm.findFragmentByTag(getString(R.string.tag_adapter_fragment));
 
         // If the Fragment is non-null, then it is currently being
         // retained across a configuration change.
@@ -93,7 +81,7 @@ public class DiscoveryActivity
         if (currentSort == getResources().getInteger(R.integer.favorites) && discoveryAdapter != null) {
             discoveryAdapter.fetchMovies();
         }
-        if (gridLayoutManager!= null && currentPosition != null) {
+        if (gridLayoutManager != null) {
             gridLayoutManager.scrollToPosition(currentPosition);
         }
     }
@@ -155,7 +143,7 @@ public class DiscoveryActivity
         gridLayoutManager.removeAllViews();
         currentSort = position;
         discoveryAdapter.setSortType(position);
-        currentPosition = null;
+        currentPosition = 0;
         if (currentSort != getResources().getInteger(R.integer.favorites)) {
             movieRecyclerView.addOnScrollListener(scrollListener);
         } else {
@@ -171,18 +159,16 @@ public class DiscoveryActivity
     /**
      * Sets the adapter to the recycler view
      *
-     * @param  adapter restored or created adapter
+     * @param adapter restored or created adapter
      */
     @Override
     public void setAdapter(DiscoveryAdapter adapter) {
-        discoveryAdapter   = adapter;
+        discoveryAdapter = adapter;
 
-        //todo remove from build config
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            gridLayoutManager   = new GridLayoutManager(this, BuildConfig.NUMBER_OF_COLUMNS_PORT);
-        }
-        else{
-            gridLayoutManager   = new GridLayoutManager(this, BuildConfig.NUMBER_OF_COLUMNS_LAND);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            gridLayoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.number_of_columns_port));
+        } else {
+            gridLayoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.number_of_columns_land));
         }
 
         movieRecyclerView.setLayoutManager(gridLayoutManager);
@@ -200,10 +186,22 @@ public class DiscoveryActivity
         }
 
 
-        if (currentPosition != null) {
+        if (discoveryAdapter.getItemCount() > 0) {
             gridLayoutManager.scrollToPosition(currentPosition);
         } else {
             discoveryAdapter.fetchMovies();
         }
+    }
+
+    private void createSpinner() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+            this,
+            R.array.sort_array,
+            android.R.layout.simple_spinner_item
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
     }
 }

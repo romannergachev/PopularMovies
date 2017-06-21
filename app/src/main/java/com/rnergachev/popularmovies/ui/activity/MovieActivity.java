@@ -13,7 +13,6 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.rnergachev.popularmovies.BuildConfig;
 import com.rnergachev.popularmovies.PopularMoviesApplication;
 import com.rnergachev.popularmovies.R;
 import com.rnergachev.popularmovies.data.model.Movie;
@@ -33,29 +32,39 @@ import butterknife.ButterKnife;
 
 /**
  * Activity with the details of the selected movie
- *
+ * <p>
  * Created by rnergachev on 27/01/2017.
  */
 
 public class MovieActivity extends AppCompatActivity
-        implements TrailerAdapterFragment.AdapterCallbacks, ReviewAdapterFragment.AdapterCallbacks, MovieActivityView {
+    implements TrailerAdapterFragment.AdapterCallbacks, ReviewAdapterFragment.AdapterCallbacks, MovieActivityView {
     private Movie movie;
 
-    @BindView(R.id.movie_poster_image_view) ImageView poster;
-    @BindView(R.id.title_text_view) TextView title;
-    @BindView(R.id.release_date_text_view) TextView date;
-    @BindView(R.id.votes_text_view) TextView votes;
-    @BindView(R.id.overview_text_view) TextView overview;
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.trailers_list) RecyclerView trailersRecyclerView;
-    @BindView(R.id.reviews_list) RecyclerView reviewsRecyclerView;
-    @BindView(R.id.favorite) CheckBox favoriteCheckBox;
+    @BindView(R.id.movie_poster_image_view)
+    ImageView poster;
+    @BindView(R.id.title_text_view)
+    TextView title;
+    @BindView(R.id.release_date_text_view)
+    TextView date;
+    @BindView(R.id.votes_text_view)
+    TextView votes;
+    @BindView(R.id.overview_text_view)
+    TextView overview;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.trailers_list)
+    RecyclerView trailersRecyclerView;
+    @BindView(R.id.reviews_list)
+    RecyclerView reviewsRecyclerView;
+    @BindView(R.id.favorite)
+    CheckBox favoriteCheckBox;
 
     private LinearLayoutManager linearLayoutManager;
     private ReviewAdapter reviewAdapter;
     private int currentPosition;
 
-    @Inject MovieActivityPresenter movieActivityPresenter;
+    @Inject
+    MovieActivityPresenter movieActivityPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -134,8 +143,8 @@ public class MovieActivity extends AppCompatActivity
     /**
      * Sets review adapter
      *
-     * @param  adapter   adapter to set
-     * @param  isInitial is initial?
+     * @param adapter   adapter to set
+     * @param isInitial is initial?
      */
     @Override
     public void setReviewAdapter(ReviewAdapter adapter, boolean isInitial) {
@@ -165,24 +174,23 @@ public class MovieActivity extends AppCompatActivity
     /**
      * Sets trailer restored or created trailer adapter
      *
-     * @param  adapter   adapter to set
-     * @param  isInitial is initial?
+     * @param adapter   adapter to set
+     * @param isInitial is initial?
      */
     @Override
     public void setTrailerAdapter(TrailerAdapter adapter, boolean isInitial) {
 
         GridLayoutManager gridLayoutManager;
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            gridLayoutManager = new GridLayoutManager(this, BuildConfig.NUMBER_OF_COLUMNS_PORT);
-        }
-        else{
-            gridLayoutManager = new GridLayoutManager(this, BuildConfig.NUMBER_OF_COLUMNS_LAND);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            gridLayoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.number_of_columns_port));
+        } else {
+            gridLayoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.number_of_columns_land));
         }
 
         trailersRecyclerView.setLayoutManager(gridLayoutManager);
         trailersRecyclerView.setAdapter(adapter);
 
-        if(isInitial) {
+        if (isInitial) {
             adapter.fetchTrailers(movie.getId());
         }
     }
@@ -190,7 +198,7 @@ public class MovieActivity extends AppCompatActivity
     /**
      * Set favorite state
      *
-     * @param  state favorite state
+     * @param state favorite state
      */
     @Override
     public void setFavoriteState(boolean state) {

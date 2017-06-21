@@ -25,7 +25,6 @@ import dagger.Component;
 @Component(modules = ApplicationModule.class)
 public interface ApplicationComponent {
     // inject context and movieDbService
-    //todo inject using fragment/activity
     void inject(DiscoveryAdapterFragment discoveryAdapterFragment);
     void inject(ReviewAdapterFragment reviewAdapterFragment);
     void inject(TrailerAdapterFragment trailerAdapterFragment);

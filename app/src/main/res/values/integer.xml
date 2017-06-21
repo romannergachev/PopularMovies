@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="favorites">2</integer>
+    <integer name="number_of_columns_port">2</integer>
+    <integer name="number_of_columns_land">4</integer>
 </resources>
