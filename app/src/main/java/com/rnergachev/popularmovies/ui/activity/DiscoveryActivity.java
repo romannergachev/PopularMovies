@@ -43,7 +43,9 @@ public class DiscoveryActivity
     @BindView(R.id.spinner_sort) Spinner spinner;
     private EndlessRecyclerViewScrollListener scrollListener;
     private GridLayoutManager gridLayoutManager;
+    //todo create enum
     private int currentSort;
+    //todo change to int
     private Integer currentPosition;
     private DiscoveryAdapter discoveryAdapter;
     private DiscoveryAdapterFragment discoveryAdapterFragment;
@@ -61,6 +63,7 @@ public class DiscoveryActivity
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         //add and configure spinner
+        //todo possibly move to a method
         currentSort = 0;
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
             this,
@@ -68,6 +71,8 @@ public class DiscoveryActivity
             android.R.layout.simple_spinner_item
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //todo end
+
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
@@ -83,12 +88,6 @@ public class DiscoveryActivity
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        currentPosition = gridLayoutManager.findFirstVisibleItemPosition();
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         if (currentSort == getResources().getInteger(R.integer.favorites) && discoveryAdapter != null) {
@@ -97,6 +96,12 @@ public class DiscoveryActivity
         if (gridLayoutManager!= null && currentPosition != null) {
             gridLayoutManager.scrollToPosition(currentPosition);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        currentPosition = gridLayoutManager.findFirstVisibleItemPosition();
     }
 
     @Override
@@ -149,7 +154,7 @@ public class DiscoveryActivity
         }
         gridLayoutManager.removeAllViews();
         currentSort = position;
-        discoveryAdapter.clearAdapter(position);
+        discoveryAdapter.setSortType(position);
         currentPosition = null;
         if (currentSort != getResources().getInteger(R.integer.favorites)) {
             movieRecyclerView.addOnScrollListener(scrollListener);
@@ -172,6 +177,7 @@ public class DiscoveryActivity
     public void setAdapter(DiscoveryAdapter adapter) {
         discoveryAdapter   = adapter;
 
+        //todo remove from build config
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
             gridLayoutManager   = new GridLayoutManager(this, BuildConfig.NUMBER_OF_COLUMNS_PORT);
         }
@@ -181,8 +187,6 @@ public class DiscoveryActivity
 
         movieRecyclerView.setLayoutManager(gridLayoutManager);
         movieRecyclerView.setAdapter(discoveryAdapter);
-
-        //movieRecyclerView.addItemDecoration(new RecyclerViewItemDecorator(0));
 
         //add view scroll listener to check the end of the list and fetch new data
         scrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {

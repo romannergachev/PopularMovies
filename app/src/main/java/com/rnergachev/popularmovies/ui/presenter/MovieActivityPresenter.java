@@ -23,11 +23,12 @@ import io.realm.RealmResults;
 
 @Singleton
 public class MovieActivityPresenter {
-    @Inject Realm realm;
+    private Realm realm;
     private MovieActivityView view;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    @Inject MovieActivityPresenter() {
+    @Inject MovieActivityPresenter(Realm realm) {
+        this.realm = realm;
     }
 
     public void onStart(MovieActivityView view) {

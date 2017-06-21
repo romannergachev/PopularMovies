@@ -9,7 +9,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,7 +30,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
 
 /**
  * Activity with the details of the selected movie
@@ -53,14 +51,9 @@ public class MovieActivity extends AppCompatActivity
     @BindView(R.id.reviews_list) RecyclerView reviewsRecyclerView;
     @BindView(R.id.favorite) CheckBox favoriteCheckBox;
 
-    private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
-    private TrailerAdapter trailerAdapter;
-    private TrailerAdapterFragment trailerAdapterFragment;
     private ReviewAdapter reviewAdapter;
-    private ReviewAdapterFragment reviewAdapterFragment;
-    private EndlessRecyclerViewScrollListener scrollListener;
-    private Integer currentPosition;
+    private int currentPosition;
 
     @Inject MovieActivityPresenter movieActivityPresenter;
 
@@ -85,7 +78,7 @@ public class MovieActivity extends AppCompatActivity
         //restore movie from extras as parcelable
         movie = getIntent().getParcelableExtra(getString(R.string.extra_movie));
 
-        currentPosition = null;
+        currentPosition = 0;
 
         //show data on screen
         Picasso.with(this).load(getString(R.string.image_base_url) + movie.getPosterPath()).into(poster);
@@ -95,8 +88,8 @@ public class MovieActivity extends AppCompatActivity
         overview.setText(movie.getOverview());
 
         FragmentManager fm = getFragmentManager();
-        trailerAdapterFragment = (TrailerAdapterFragment) fm.findFragmentByTag(getString(R.string.tag_trailer_adapter_fragment));
-        reviewAdapterFragment = (ReviewAdapterFragment) fm.findFragmentByTag(getString(R.string.tag_review_adapter_fragment));
+        TrailerAdapterFragment trailerAdapterFragment = (TrailerAdapterFragment) fm.findFragmentByTag(getString(R.string.tag_trailer_adapter_fragment));
+        ReviewAdapterFragment reviewAdapterFragment = (ReviewAdapterFragment) fm.findFragmentByTag(getString(R.string.tag_review_adapter_fragment));
 
         // If the Fragment is non-null, then it is currently being
         // retained across a configuration change.
@@ -154,7 +147,7 @@ public class MovieActivity extends AppCompatActivity
         reviewsRecyclerView.setAdapter(reviewAdapter);
 
         //add view scroll listener to check the end of the list and fetch new data
-        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 reviewAdapter.fetchReviews(movie.getId());
@@ -165,10 +158,7 @@ public class MovieActivity extends AppCompatActivity
         if (isInitial) {
             reviewAdapter.fetchReviews(movie.getId());
         } else {
-            if (currentPosition != null) {
-                linearLayoutManager.scrollToPosition(currentPosition);
-            }
-
+            linearLayoutManager.scrollToPosition(currentPosition);
         }
     }
 
@@ -180,20 +170,20 @@ public class MovieActivity extends AppCompatActivity
      */
     @Override
     public void setTrailerAdapter(TrailerAdapter adapter, boolean isInitial) {
-        trailerAdapter = adapter;
 
+        GridLayoutManager gridLayoutManager;
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            gridLayoutManager   = new GridLayoutManager(this, BuildConfig.NUMBER_OF_COLUMNS_PORT);
+            gridLayoutManager = new GridLayoutManager(this, BuildConfig.NUMBER_OF_COLUMNS_PORT);
         }
         else{
-            gridLayoutManager   = new GridLayoutManager(this, BuildConfig.NUMBER_OF_COLUMNS_LAND);
+            gridLayoutManager = new GridLayoutManager(this, BuildConfig.NUMBER_OF_COLUMNS_LAND);
         }
 
         trailersRecyclerView.setLayoutManager(gridLayoutManager);
-        trailersRecyclerView.setAdapter(trailerAdapter);
+        trailersRecyclerView.setAdapter(adapter);
 
         if(isInitial) {
-            trailerAdapter.fetchTrailers(movie.getId());
+            adapter.fetchTrailers(movie.getId());
         }
     }
 

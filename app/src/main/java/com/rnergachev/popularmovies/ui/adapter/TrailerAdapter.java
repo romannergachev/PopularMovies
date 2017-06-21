@@ -36,13 +36,13 @@ import io.reactivex.Single;
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerAdapterViewHolder> {
     private List<Trailer> trailerList;
     private Context context;
-    @Inject MovieApi movieApi;
+    private MovieApi movieApi;
 
-    public TrailerAdapter(Activity activity) {
-        this.context = activity;
+    @Inject
+    public TrailerAdapter(Context context, MovieApi movieApi) {
+        this.context = context;
+        this.movieApi = movieApi;
         trailerList = new ArrayList<>();
-        PopularMoviesApplication application = (PopularMoviesApplication) activity.getApplication();
-        application.appComponent.inject(this);
     }
 
     /**

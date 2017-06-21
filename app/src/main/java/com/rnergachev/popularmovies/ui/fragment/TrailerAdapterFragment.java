@@ -1,11 +1,12 @@
 package com.rnergachev.popularmovies.ui.fragment;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 
-import com.rnergachev.popularmovies.ui.activity.MovieActivity;
+import com.rnergachev.popularmovies.PopularMoviesApplication;
 import com.rnergachev.popularmovies.ui.adapter.TrailerAdapter;
+
+import javax.inject.Inject;
 
 /**
  * Fragment for retention of trailer adapter
@@ -24,7 +25,7 @@ public class TrailerAdapterFragment extends Fragment {
     }
 
     private AdapterCallbacks callbacks;
-    private TrailerAdapter trailerAdapter;
+    @Inject TrailerAdapter trailerAdapter;
     private boolean isInitial;
 
     /**
@@ -38,11 +39,9 @@ public class TrailerAdapterFragment extends Fragment {
         // Retain this fragment across configuration changes.
         setRetainInstance(true);
 
-        MovieActivity movieActivity = (MovieActivity) getActivity();
-
-        // Create and execute the background task.
-        trailerAdapter = new TrailerAdapter(movieActivity);
         isInitial = true;
+
+        ((PopularMoviesApplication) getActivity().getApplication()).appComponent.inject(this);
     }
 
     @Override

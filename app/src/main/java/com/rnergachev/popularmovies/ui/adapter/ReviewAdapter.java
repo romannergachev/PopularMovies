@@ -33,14 +33,14 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdap
     private List<Review> reviewList;
     private int currentPage;
     private int maxPage;
-    @Inject MovieApi movieApi;
+    private MovieApi movieApi;
 
-    public ReviewAdapter(Activity activity) {
+    @Inject
+    public ReviewAdapter(MovieApi movieApi) {
         currentPage = 0;
+        this.movieApi = movieApi;
         maxPage = Integer.MAX_VALUE;
         reviewList = new ArrayList<>();
-        PopularMoviesApplication application = (PopularMoviesApplication) activity.getApplication();
-        application.appComponent.inject(this);
     }
 
     /**

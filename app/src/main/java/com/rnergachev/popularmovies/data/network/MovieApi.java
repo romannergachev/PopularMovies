@@ -1,7 +1,6 @@
 package com.rnergachev.popularmovies.data.network;
 
 import com.rnergachev.popularmovies.BuildConfig;
-import com.rnergachev.popularmovies.data.model.Movie;
 import com.rnergachev.popularmovies.data.model.MoviesResponse;
 import com.rnergachev.popularmovies.data.model.ReviewsResponse;
 import com.rnergachev.popularmovies.data.model.TrailersResponse;
@@ -14,18 +13,18 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Movie API calling MovieDbService
+ * Movie API calling MovieService
  *
  * Created by rnergachev on 27/01/2017.
  */
 
 @Singleton
 public class MovieApi {
-    private MovieDbService movieDbService;
+    private MovieService movieService;
 
     @Inject
-    public MovieApi(MovieDbService movieDbService) {
-        this.movieDbService = movieDbService;
+    public MovieApi(MovieService movieService) {
+        this.movieService = movieService;
     }
 
     /**
@@ -35,7 +34,7 @@ public class MovieApi {
      * @return        {@link Single<MoviesResponse>}
      */
     public Single<MoviesResponse> popularMovies(int page) {
-        return applySchedulers(movieDbService.popularMovies(BuildConfig.THE_MOVIE_DB_API_KEY, page));
+        return applySchedulers(movieService.popularMovies(BuildConfig.THE_MOVIE_DB_API_KEY, page));
     }
 
     /**
@@ -45,7 +44,7 @@ public class MovieApi {
      * @return        {@link Single<MoviesResponse>}
      */
     public Single<MoviesResponse> topRatedMovies(int page) {
-        return applySchedulers(movieDbService.topRatedMovies(BuildConfig.THE_MOVIE_DB_API_KEY, page));
+        return applySchedulers(movieService.topRatedMovies(BuildConfig.THE_MOVIE_DB_API_KEY, page));
     }
 
     /**
@@ -55,7 +54,7 @@ public class MovieApi {
      * @return        {@link Single<TrailersResponse>}
      */
     public Single<TrailersResponse> getTrailers(int movieId) {
-        return applySchedulers(movieDbService.getTrailers(movieId, BuildConfig.THE_MOVIE_DB_API_KEY));
+        return applySchedulers(movieService.getTrailers(movieId, BuildConfig.THE_MOVIE_DB_API_KEY));
     }
 
     /**
@@ -65,7 +64,7 @@ public class MovieApi {
      * @return        {@link Single<ReviewsResponse>}
      */
     public Single<ReviewsResponse> getReviews(int movieId) {
-        return applySchedulers(movieDbService.getReviews(movieId, BuildConfig.THE_MOVIE_DB_API_KEY));
+        return applySchedulers(movieService.getReviews(movieId, BuildConfig.THE_MOVIE_DB_API_KEY));
     }
 
     /**

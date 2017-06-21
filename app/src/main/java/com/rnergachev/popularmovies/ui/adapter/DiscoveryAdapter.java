@@ -1,6 +1,5 @@
 package com.rnergachev.popularmovies.ui.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.rnergachev.popularmovies.PopularMoviesApplication;
 import com.rnergachev.popularmovies.R;
 import com.rnergachev.popularmovies.data.model.Movie;
 import com.rnergachev.popularmovies.data.model.MoviesResponse;
@@ -38,47 +36,24 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
     private int currentPage;
     private int maxPage;
     private Context context;
-    private final DiscoveryAdapterHandler handler;
+    private DiscoveryAdapterHandler handler;
     private int sortType;
-    @Inject MovieApi movieApi;
-    @Inject Realm realm;
+    private MovieApi movieApi;
+    private Realm realm;
 
-    public DiscoveryAdapter(Activity activity, DiscoveryAdapterHandler handler, int sortType) {
+    @Inject
+    public DiscoveryAdapter(Context context, MovieApi movieApi, Realm realm) {
         currentPage = 0;
         maxPage = Integer.MAX_VALUE;
-        this.context = activity;
-        this.handler = handler;
+        this.context = context;
         movieList = new ArrayList<>();
-        this.sortType = sortType;
-        PopularMoviesApplication application = (PopularMoviesApplication) activity.getApplication();
-        application.appComponent.inject(this);
+        this.sortType = 0;
+        this.movieApi = movieApi;
+        this.realm = realm;
     }
 
-    public interface DiscoveryAdapterHandler {
-        /**
-         * Performs the movie selection
-         *
-         * @param  movie that has been selected
-         */
-        void onClick(Movie movie);
-        /**
-         * Returns the error
-         *
-         * @param  exception error
-         */
-        void onError(Throwable exception);
-        /**
-         * Shows progress bar
-         */
-        void onFetchingStarted();
-        /**
-         * Hides progress bar
-         */
-        void onFetchingEnded();
-        /**
-         * Dismisses error
-         */
-        void onDismissError();
+    public void setHandler(DiscoveryAdapterHandler handler) {
+        this.handler = handler;
     }
 
     /**
@@ -167,13 +142,43 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
 
     /**
      * Clears adapter before fetch data with a new sort type
-     *
-     * @param  sortType new sort type
      */
-    public void clearAdapter(int sortType) {
+    private void clearAdapter() {
         currentPage = 0;
         maxPage = Integer.MAX_VALUE;
         movieList = new ArrayList<>();
+
+    }
+
+    public void setSortType(int sortType) {
         this.sortType = sortType;
+        clearAdapter();
+    }
+
+    public interface DiscoveryAdapterHandler {
+        /**
+         * Performs the movie selection
+         *
+         * @param  movie that has been selected
+         */
+        void onClick(Movie movie);
+        /**
+         * Returns the error
+         *
+         * @param  exception error
+         */
+        void onError(Throwable exception);
+        /**
+         * Shows progress bar
+         */
+        void onFetchingStarted();
+        /**
+         * Hides progress bar
+         */
+        void onFetchingEnded();
+        /**
+         * Dismisses error
+         */
+        void onDismissError();
     }
 }

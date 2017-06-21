@@ -1,11 +1,12 @@
 package com.rnergachev.popularmovies.ui.fragment;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 
-import com.rnergachev.popularmovies.ui.activity.MovieActivity;
+import com.rnergachev.popularmovies.PopularMoviesApplication;
 import com.rnergachev.popularmovies.ui.adapter.ReviewAdapter;
+
+import javax.inject.Inject;
 
 /**
  * Fragment for retention of review adapter
@@ -24,8 +25,9 @@ public class ReviewAdapterFragment extends Fragment {
     }
 
     private AdapterCallbacks callbacks;
-    private ReviewAdapter reviewAdapter;
+    @Inject ReviewAdapter reviewAdapter;
     private boolean isInitial;
+
 
     /**
      * This method will only be called once when the retained
@@ -37,12 +39,9 @@ public class ReviewAdapterFragment extends Fragment {
 
         // Retain this fragment across configuration changes.
         setRetainInstance(true);
-
-        MovieActivity movieActivity = (MovieActivity) getActivity();
-
-        // Create and execute the background task.
-        reviewAdapter = new ReviewAdapter(movieActivity);
         isInitial = true;
+
+        ((PopularMoviesApplication) getActivity().getApplication()).appComponent.inject(this);
     }
 
     @Override

@@ -15,7 +15,7 @@ import retrofit2.http.Query;
  * Created by rnergachev on 27/01/2017.
  */
 
-public interface MovieDbService {
+public interface MovieService {
 
     /**
      * Returns popular movies as an Single object

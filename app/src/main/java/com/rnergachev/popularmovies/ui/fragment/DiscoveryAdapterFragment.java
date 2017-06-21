@@ -3,8 +3,10 @@ package com.rnergachev.popularmovies.ui.fragment;
 import android.app.Fragment;
 import android.os.Bundle;
 
-import com.rnergachev.popularmovies.ui.activity.DiscoveryActivity;
+import com.rnergachev.popularmovies.PopularMoviesApplication;
 import com.rnergachev.popularmovies.ui.adapter.DiscoveryAdapter;
+
+import javax.inject.Inject;
 
 /**
  * Fragment for retention of discovery adapter
@@ -23,7 +25,7 @@ public class DiscoveryAdapterFragment extends Fragment {
     }
 
     private AdapterCallbacks callbacks;
-    private DiscoveryAdapter discoveryAdapter;
+    @Inject DiscoveryAdapter discoveryAdapter;
 
     /**
      * This method will only be called once when the retained
@@ -36,16 +38,16 @@ public class DiscoveryAdapterFragment extends Fragment {
         // Retain this fragment across configuration changes.
         setRetainInstance(true);
 
-        DiscoveryActivity discoveryActivity = (DiscoveryActivity) getActivity();
-
-        // Create and execute the background task.
-        discoveryAdapter = new DiscoveryAdapter(discoveryActivity, discoveryActivity, 0);
+        ((PopularMoviesApplication) getActivity().getApplication()).appComponent.inject(this);
     }
 
     @Override
     public void onStart() {
         super.onStart();
         callbacks = (AdapterCallbacks) getActivity();
+        if (discoveryAdapter != null) {
+            discoveryAdapter.setHandler((DiscoveryAdapter.DiscoveryAdapterHandler) getActivity());
+        }
 
     }
 
