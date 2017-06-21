@@ -142,6 +142,7 @@ public class MovieActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        supportFinishAfterTransition();
         super.onBackPressed();
     }
 
