@@ -1,5 +1,6 @@
 package com.rnergachev.popularmovies.ui.activity;
 
+import android.app.ActivityOptions;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -110,7 +111,7 @@ public class DiscoveryActivity
     public void onClick(Movie movie) {
         Intent intent = new Intent(this, MovieActivity.class);
         intent.putExtra(getString(R.string.extra_movie), movie);
-        startActivity(intent);
+        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
     }
 
     @Override
