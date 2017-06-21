@@ -140,6 +140,11 @@ public class MovieActivity extends AppCompatActivity
         currentPosition = savedInstanceState.getInt(getString(R.string.review_position));
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
     /**
      * Sets review adapter
      *

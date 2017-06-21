@@ -73,7 +73,7 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             Movie movie = movieList.get(adapterPosition);
-            handler.onClick(movie);
+            handler.onClick(movie, v);
         }
     }
 
@@ -160,8 +160,9 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
          * Performs the movie selection
          *
          * @param  movie that has been selected
+         * @param  view  that has been clicked
          */
-        void onClick(Movie movie);
+        void onClick(Movie movie, View view);
         /**
          * Returns the error
          *

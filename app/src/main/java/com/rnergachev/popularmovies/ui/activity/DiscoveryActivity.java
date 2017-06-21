@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -108,10 +109,11 @@ public class DiscoveryActivity
     }
 
     @Override
-    public void onClick(Movie movie) {
+    public void onClick(Movie movie, View view) {
         Intent intent = new Intent(this, MovieActivity.class);
         intent.putExtra(getString(R.string.extra_movie), movie);
-        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+        ActivityOptionsCompat options = ActivityOptionsCompat. makeSceneTransitionAnimation(this, view, getString(R.string.transition_image));
+        startActivity(intent, options.toBundle());
     }
 
     @Override
