@@ -2,9 +2,6 @@ package com.rnergachev.popularmovies.di;
 
 import com.rnergachev.popularmovies.ui.activity.DiscoveryActivity;
 import com.rnergachev.popularmovies.ui.activity.MovieActivity;
-import com.rnergachev.popularmovies.ui.adapter.DiscoveryAdapter;
-import com.rnergachev.popularmovies.ui.adapter.ReviewAdapter;
-import com.rnergachev.popularmovies.ui.adapter.TrailerAdapter;
 import com.rnergachev.popularmovies.ui.fragment.DiscoveryAdapterFragment;
 import com.rnergachev.popularmovies.ui.fragment.ReviewAdapterFragment;
 import com.rnergachev.popularmovies.ui.fragment.TrailerAdapterFragment;

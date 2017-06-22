@@ -16,6 +16,12 @@
     <string name="utube_thmb">/0.jpg</string>
     <string name="votes">/10</string>
     <string name="transition_image">TRANSITION_IMAGE</string>
+    <string name="poster_image">Poster image</string>
+    <string name="release_date">Release date:</string>
+    <string name="rating">Rating:</string>
+    <string name="reviews">Reviews</string>
+    <string name="trailers">Trailers</string>
+    <string name="your_favorite">Your Favorite?</string>
 
 
     <string-array name="sort_array">

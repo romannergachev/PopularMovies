@@ -1,6 +1,5 @@
 package com.rnergachev.popularmovies.ui.activity;
 
-import android.app.ActivityOptions;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
