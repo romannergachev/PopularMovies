@@ -55,7 +55,6 @@ public class MovieActivityPresenter {
                     } else {
                         movieFromRealm.deleteAllFromRealm();
                     }
-
                     realm.commitTransaction();
                 },
                 this::showError
