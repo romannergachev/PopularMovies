@@ -11,6 +11,10 @@ import java.util.List;
 public class TrailersResponse {
     private List<Trailer> results;
 
+    public TrailersResponse(List<Trailer> items) {
+        this.results = items;
+    }
+
     public List<Trailer> getTrailers() {
         return results;
     }

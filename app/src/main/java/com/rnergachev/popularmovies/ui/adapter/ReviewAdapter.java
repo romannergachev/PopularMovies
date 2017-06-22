@@ -1,6 +1,5 @@
 package com.rnergachev.popularmovies.ui.adapter;
 
-import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.rnergachev.popularmovies.PopularMoviesApplication;
 import com.rnergachev.popularmovies.R;
 import com.rnergachev.popularmovies.data.model.Review;
 import com.rnergachev.popularmovies.data.model.ReviewsResponse;
@@ -25,7 +23,7 @@ import io.reactivex.Single;
 
 /**
  * Adapter class for Reviews list
- *
+ * <p>
  * Created by rnergachev on 03/03/2017.
  */
 
@@ -34,6 +32,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdap
     private int currentPage;
     private int maxPage;
     private MovieApi movieApi;
+    private ReviewAdapterHandler handler;
 
     @Inject
     public ReviewAdapter(MovieApi movieApi) {
@@ -48,8 +47,10 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdap
      */
     class ReviewAdapterViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.author_text_view) TextView authorText;
-        @BindView(R.id.content_text_view) TextView contentText;
+        @BindView(R.id.author_text_view)
+        TextView authorText;
+        @BindView(R.id.content_text_view)
+        TextView contentText;
 
         ReviewAdapterViewHolder(View view) {
             super(view);
@@ -79,28 +80,42 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdap
 
     /**
      * Fetches reviews and adds them to the list
-     *
      */
     public void fetchReviews(int movieId) {
         if (currentPage == maxPage) {
             return;
         }
         currentPage++;
-        Log.d(getClass().getName(), "Fetching reviews page: " + currentPage);
         Single<ReviewsResponse> request = movieApi.getReviews(movieId);
 
         request.subscribe(
-                response -> {
-                    reviewList.addAll(response.getReviews());
-                    this.notifyDataSetChanged();
-                    maxPage = response.getTotalPages();
-                },
-                this::showError
+            response -> {
+                reviewList.addAll(response.getReviews());
+                handler.onReviewDataUpdated();
+                maxPage = response.getTotalPages();
+            },
+            this::showError
         );
 
     }
 
+    /**
+     * Sets handler
+     *
+     * @param handler to set
+     */
+    public void setHandler(ReviewAdapterHandler handler) {
+        this.handler = handler;
+    }
+
     private void showError(Throwable exception) {
         Log.d(this.getClass().getName(), exception.getMessage());
+    }
+
+    public interface ReviewAdapterHandler {
+        /**
+         * Update reviews recyclerview with new data
+         */
+        void onReviewDataUpdated();
     }
 }

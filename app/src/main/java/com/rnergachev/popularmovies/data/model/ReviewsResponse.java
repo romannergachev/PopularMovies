@@ -18,6 +18,10 @@ public class ReviewsResponse {
     @SerializedName("total_pages")
     private int totalPages;
 
+    public ReviewsResponse(List<Review> items) {
+        this.results = items;
+    }
+
     public List<Review> getReviews() {
         return results;
     }

@@ -1,6 +1,5 @@
 package com.rnergachev.popularmovies.ui.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.rnergachev.popularmovies.PopularMoviesApplication;
 import com.rnergachev.popularmovies.R;
 import com.rnergachev.popularmovies.data.model.Trailer;
 import com.rnergachev.popularmovies.data.model.TrailersResponse;
@@ -37,6 +35,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerA
     private List<Trailer> trailerList;
     private Context context;
     private MovieApi movieApi;
+    private TrailerAdapterHandler handler;
 
     @Inject
     public TrailerAdapter(Context context, MovieApi movieApi) {
@@ -90,20 +89,35 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerA
      *
      */
     public void fetchTrailers(int movieId) {
-        Log.d(getClass().getName(), "Fetching trailers... ");
         Single<TrailersResponse> request = movieApi.getTrailers(movieId);
 
         request.subscribe(
                 response -> {
                     trailerList.addAll(response.getTrailers());
-                    this.notifyDataSetChanged();
+                    handler.onTrailerDataUpdated();
                 },
                 this::showError
         );
 
     }
 
+    /**
+     * Sets handler
+     *
+     * @param handler to set
+     */
+    public void setHandler(TrailerAdapterHandler handler) {
+        this.handler = handler;
+    }
+
     private void showError(Throwable exception) {
         Log.d(this.getClass().getName(), exception.getMessage());
+    }
+
+    public interface TrailerAdapterHandler {
+        /**
+         * Update trailers recyclerview with new data
+         */
+        void onTrailerDataUpdated();
     }
 }

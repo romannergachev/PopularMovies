@@ -37,7 +37,7 @@ import butterknife.ButterKnife;
  */
 
 public class MovieActivity extends AppCompatActivity
-    implements TrailerAdapterFragment.AdapterCallbacks, ReviewAdapterFragment.AdapterCallbacks, MovieActivityView {
+    implements TrailerAdapterFragment.AdapterCallbacks, ReviewAdapterFragment.AdapterCallbacks, MovieActivityView, ReviewAdapter.ReviewAdapterHandler, TrailerAdapter.TrailerAdapterHandler {
     private Movie movie;
 
     @BindView(R.id.movie_poster_image_view)
@@ -209,5 +209,15 @@ public class MovieActivity extends AppCompatActivity
     @Override
     public void setFavoriteState(boolean state) {
         favoriteCheckBox.setChecked(state);
+    }
+
+    @Override
+    public void onReviewDataUpdated() {
+        reviewsRecyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void onTrailerDataUpdated() {
+        trailersRecyclerView.getAdapter().notifyDataSetChanged();
     }
 }

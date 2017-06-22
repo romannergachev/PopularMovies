@@ -14,6 +14,10 @@ public class Trailer implements Parcelable {
     private String name;
     private String key;
 
+    public Trailer() {
+
+    }
+
     public Trailer(String id, String name, String key) {
         this.id = id;
         this.key = key;

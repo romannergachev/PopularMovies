@@ -48,6 +48,9 @@ public class TrailerAdapterFragment extends Fragment {
     public void onStart() {
         super.onStart();
         callbacks = (AdapterCallbacks) getActivity();
+        if (trailerAdapter != null) {
+            trailerAdapter.setHandler((TrailerAdapter.TrailerAdapterHandler) getActivity());
+        }
 
     }
 

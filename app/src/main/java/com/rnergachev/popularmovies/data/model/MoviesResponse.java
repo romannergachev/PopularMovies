@@ -18,6 +18,12 @@ public class MoviesResponse {
     @SerializedName("total_pages")
     private int totalPages;
 
+    public MoviesResponse() {}
+
+    public MoviesResponse(List<Movie> items) {
+        this.results = items;
+    }
+
     public List<Movie> getMovies() {
         return results;
     }

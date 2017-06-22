@@ -129,6 +129,11 @@ public class DiscoveryActivity
     }
 
     @Override
+    public void onDataUpdated() {
+        movieRecyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
     public void onFetchingStarted() {
         loadingIndicator.setVisibility(View.VISIBLE);
     }

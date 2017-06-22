@@ -2,7 +2,6 @@ package com.rnergachev.popularmovies.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +26,7 @@ import io.realm.RealmResults;
 
 /**
  * Adapter class for Movies list
- *
+ * <p>
  * Created by roman on 28.1.2017.
  */
 
@@ -52,16 +51,13 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
         this.realm = realm;
     }
 
-    public void setHandler(DiscoveryAdapterHandler handler) {
-        this.handler = handler;
-    }
-
     /**
      * ViewHolder class in order to hold and reuse previously inflated views
      */
     class DiscoveryAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @BindView(R.id.movie_thumbnail_image_view) ImageView movieThumbnail;
+        @BindView(R.id.movie_thumbnail_image_view)
+        ImageView movieThumbnail;
 
         DiscoveryAdapterViewHolder(View view) {
             super(view);
@@ -97,7 +93,6 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
 
     /**
      * Fetches the movies (popular or top rated, or favorites from DB) and add them to the movieList
-     *
      */
     public void fetchMovies() {
         if (currentPage == maxPage) {
@@ -106,30 +101,34 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
         handler.onDismissError();
         handler.onFetchingStarted();
         currentPage++;
-        Log.d(getClass().getName(), "Fetching page: " + currentPage);
         Single<MoviesResponse> request;
         switch (sortType) {
-            case 0: request = movieApi.popularMovies(currentPage); break;
-            case 1: request = movieApi.topRatedMovies(currentPage); break;
-            default: request = Single.just(new MoviesResponse());
+            case 0:
+                request = movieApi.popularMovies(currentPage);
+                break;
+            case 1:
+                request = movieApi.topRatedMovies(currentPage);
+                break;
+            default:
+                request = Single.just(new MoviesResponse());
 
         }
 
         request.subscribe(
             response -> {
-                if (sortType == context.getResources().getInteger(R.integer.favorites)) {
+                if (sortType == 2) {
                     RealmResults<Movie> realmResults = realm.where(Movie.class).findAll();
                     if (realmResults.size() == 0) {
                         movieList.clear();
-                        this.notifyDataSetChanged();
+                        handler.onDataUpdated();
                         return;
                     }
                     movieList.clear();
                     movieList.addAll(realmResults.subList(0, realmResults.size()));
-                    this.notifyDataSetChanged();
+                    handler.onDataUpdated();
                 } else {
                     movieList.addAll(response.getMovies());
-                    this.notifyDataSetChanged();
+                    handler.onDataUpdated();
                     maxPage = response.getTotalPages();
                     handler.onFetchingEnded();
                 }
@@ -150,6 +149,20 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
 
     }
 
+    /**
+     * Sets handler
+     *
+     * @param handler to set
+     */
+    public void setHandler(DiscoveryAdapterHandler handler) {
+        this.handler = handler;
+    }
+
+    /**
+     * Sets selected sort type
+     *
+     * @param sortType that has been selected
+     */
     public void setSortType(int sortType) {
         this.sortType = sortType;
         clearAdapter();
@@ -159,27 +172,36 @@ public class DiscoveryAdapter extends RecyclerView.Adapter<DiscoveryAdapter.Disc
         /**
          * Performs the movie selection
          *
-         * @param  movie that has been selected
-         * @param  view  that has been clicked
+         * @param movie that has been selected
+         * @param view  that has been clicked
          */
         void onClick(Movie movie, View view);
+
         /**
          * Returns the error
          *
-         * @param  exception error
+         * @param exception error
          */
         void onError(Throwable exception);
+
         /**
          * Shows progress bar
          */
         void onFetchingStarted();
+
         /**
          * Hides progress bar
          */
         void onFetchingEnded();
+
         /**
          * Dismisses error
          */
         void onDismissError();
+
+        /**
+         * Update recyclerview with new data
+         */
+        void onDataUpdated();
     }
 }

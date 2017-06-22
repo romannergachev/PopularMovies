@@ -48,6 +48,9 @@ public class ReviewAdapterFragment extends Fragment {
     public void onStart() {
         super.onStart();
         callbacks = (AdapterCallbacks) getActivity();
+        if (reviewAdapter != null) {
+            reviewAdapter.setHandler((ReviewAdapter.ReviewAdapterHandler) getActivity());
+        }
     }
 
     @Override
